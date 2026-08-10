@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://paper-diagram-forge.dev/schemas/scene-graph.schema.json",
+  "title": "Paper Diagram Forge scene graph",
+  "type": "object",
+  "required": ["schema_version", "canvas", "elements"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "canvas": {
+      "type": "object",
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "background": { "type": "string" },
+    "elements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "type": { "enum": ["shape", "text", "connector", "image", "group"] },
+          "bbox": {
+            "type": "array",
+            "prefixItems": [
+              { "type": "number", "minimum": 0, "maximum": 1 },
+              { "type": "number", "minimum": 0, "maximum": 1 },
+              { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+              { "type": "number", "exclusiveMinimum": 0, "maximum": 1 }
+            ],
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "text": { "type": "string" },
+          "asset_id": { "type": "string" },
+          "strategy": { "enum": ["native-text", "native-shape", "direct-extract", "regenerate-grounded"] },
+          "style": { "type": "object" }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

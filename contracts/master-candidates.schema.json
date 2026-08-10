@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://paper-diagram-forge.dev/schemas/master-candidates.schema.json",
+  "title": "Paper Diagram Forge master candidate report",
+  "type": "object",
+  "required": ["schema_version", "candidates", "selected_id"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "selected_id": { "type": ["string", "null"] },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "prompt", "semantic_complete", "missing_modules", "scores"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "prompt": { "type": "string", "minLength": 1 },
+          "semantic_complete": { "type": "boolean" },
+          "missing_modules": { "type": "array", "items": { "type": "string" } },
+          "rejection_reason": { "type": ["string", "null"] },
+          "scores": {
+            "type": "object",
+            "required": ["semantic_completeness", "visual_hierarchy", "occlusion", "decomposability", "style_consistency"],
+            "properties": {
+              "semantic_completeness": { "type": "number" },
+              "visual_hierarchy": { "type": "number" },
+              "occlusion": { "type": "number" },
+              "decomposability": { "type": "number" },
+              "style_consistency": { "type": "number" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

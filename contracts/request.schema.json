@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://paper-diagram-forge.local/contracts/request.schema.json",
+  "title": "Paper Diagram Forge request",
+  "type": "object",
+  "required": ["mode"],
+  "properties": {
+    "mode": { "enum": ["rebuild", "author"] },
+    "master_image": { "type": "string" },
+    "prompt": { "type": "string" },
+    "paper_pdf": { "type": "string" },
+    "style_references": { "type": "array", "items": { "type": "string" } },
+    "output_dir": { "type": "string" },
+    "aspect_ratio": { "type": "string" },
+    "budgets": {
+      "type": "object",
+      "properties": {
+        "master_candidates": { "type": "integer", "minimum": 1 },
+        "master_retry_rounds": { "type": "integer", "minimum": 0 },
+        "max_complex_assets": { "type": "integer", "minimum": 0 },
+        "max_asset_attempts": { "type": "integer", "minimum": 1 },
+        "max_repair_rounds": { "type": "integer", "minimum": 1 },
+        "stop_after_no_improvement_rounds": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "qa_thresholds": {
+      "type": "object",
+      "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "mode": { "const": "rebuild" } } },
+      "then": { "required": ["master_image"] }
+    },
+    {
+      "if": { "properties": { "mode": { "const": "author" } } },
+      "then": { "anyOf": [{ "required": ["prompt"] }, { "required": ["paper_pdf"] }, { "required": ["style_references"] }] }
+    }
+  ],
+  "additionalProperties": false
+}

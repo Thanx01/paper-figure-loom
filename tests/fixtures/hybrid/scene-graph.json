@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "canvas": { "width": 960, "height": 540 },
+  "background": "#FFFDF8",
+  "elements": [
+    { "id": "encoder-panel", "type": "shape", "geometry": "roundRect", "bbox": [0.06, 0.2, 0.3, 0.6], "strategy": "native-shape", "qa_role": "module", "z_index": 10, "style": { "fill": "#FFF1E6", "stroke": "#E76F51", "stroke_width": 3, "radius": 20 } },
+    { "id": "decoder-panel", "type": "shape", "geometry": "roundRect", "bbox": [0.64, 0.2, 0.3, 0.6], "strategy": "native-shape", "qa_role": "module", "z_index": 10, "style": { "fill": "#EAF2FF", "stroke": "#264653", "stroke_width": 3, "radius": 20 } },
+    { "id": "encoder-label", "type": "text", "bbox": [0.1, 0.27, 0.22, 0.08], "text": "Encoder", "strategy": "native-text", "parent": "encoder-panel", "z_index": 20, "style": { "font_size": 29, "font_weight": "700", "fill": "#9C2F1B" } },
+    { "id": "decoder-label", "type": "text", "bbox": [0.68, 0.27, 0.22, 0.08], "text": "Decoder", "strategy": "native-text", "parent": "decoder-panel", "z_index": 20, "style": { "font_size": 29, "font_weight": "700", "fill": "#17324D" } },
+    { "id": "grounded-visual", "type": "image", "asset_id": "grounded-visual-asset", "bbox": [0.4, 0.34, 0.2, 0.25], "strategy": "direct-extract", "z_index": 30, "alt": "Original synthetic layered token illustration" },
+    { "id": "figure-label", "type": "text", "bbox": [0.39, 0.62, 0.22, 0.06], "text": "Grounded visual", "strategy": "native-text", "z_index": 31, "style": { "font_size": 20, "font_weight": "700", "fill": "#334155" } },
+    { "id": "latent-flow", "type": "connector", "from": "encoder-panel", "to": "decoder-panel", "kind": "straight", "strategy": "native-shape", "z_index": 1, "style": { "stroke": "#64748B", "stroke_width": 4 } }
+  ]
+}

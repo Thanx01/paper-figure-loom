@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "jobs": [
+    { "id": "encoder-component", "strategy": "native-shape", "vector_kind": "native-vector", "bbox": [0.06, 0.2, 0.3, 0.6], "source_element_ids": ["encoder-panel", "encoder-label"], "status": "completed", "source": { "kind": "scene-graph" }, "editable_level": "full" },
+    { "id": "decoder-component", "strategy": "native-shape", "vector_kind": "native-vector", "bbox": [0.64, 0.2, 0.3, 0.6], "source_element_ids": ["decoder-panel", "decoder-label"], "status": "completed", "source": { "kind": "scene-graph" }, "editable_level": "full" },
+    { "id": "grounded-visual-asset", "strategy": "direct-extract", "vector_kind": "embedded-raster", "bbox": [0.4, 0.34, 0.2, 0.25], "source_element_ids": ["grounded-visual"], "status": "pending", "source": { "kind": "canonical-master", "reference": "canonical-master.png" }, "editable_level": "position-and-scale" }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "canvas": { "width": 960, "height": 540 },
+  "required_modules": [
+    { "id": "encoder-panel", "scene_element_id": "encoder-panel", "label": "Encoder" },
+    { "id": "decoder-panel", "scene_element_id": "decoder-panel", "label": "Decoder" }
+  ],
+  "required_connections": [
+    { "id": "latent-flow", "scene_element_id": "latent-flow", "from": "encoder-panel", "to": "decoder-panel" }
+  ],
+  "verbatim_text": {
+    "encoder-label": "Encoder",
+    "decoder-label": "Decoder",
+    "figure-label": "Grounded visual"
+  },
+  "expected_geometry": {
+    "encoder-panel": [0.06, 0.2, 0.3, 0.6],
+    "decoder-panel": [0.64, 0.2, 0.3, 0.6],
+    "encoder-label": [0.1, 0.27, 0.22, 0.08],
+    "decoder-label": [0.68, 0.27, 0.22, 0.08],
+    "grounded-visual": [0.4, 0.34, 0.2, 0.25],
+    "figure-label": [0.39, 0.62, 0.22, 0.06]
+  },
+  "style_constraints": { "theme": "original synthetic coral and navy" },
+  "invariants": { "preserve_aspect_ratio": true, "native_text": true, "no_stretched_assets": true }
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "canvas": { "width": 960, "height": 540 },
+  "background": "#F8FAFC",
+  "elements": [
+    { "id": "input-panel", "type": "shape", "geometry": "roundRect", "bbox": [0.06, 0.31, 0.22, 0.32], "strategy": "native-shape", "qa_role": "module", "z_index": 10, "style": { "fill": "#DBEAFE", "stroke": "#2563EB", "stroke_width": 3, "radius": 18 } },
+    { "id": "model-panel", "type": "shape", "geometry": "roundRect", "bbox": [0.39, 0.25, 0.22, 0.44], "strategy": "native-shape", "qa_role": "module", "z_index": 10, "style": { "fill": "#EDE9FE", "stroke": "#7C3AED", "stroke_width": 3, "radius": 18 } },
+    { "id": "output-panel", "type": "shape", "geometry": "roundRect", "bbox": [0.72, 0.31, 0.22, 0.32], "strategy": "native-shape", "qa_role": "module", "z_index": 10, "style": { "fill": "#DCFCE7", "stroke": "#16A34A", "stroke_width": 3, "radius": 18 } },
+    { "id": "input-label", "type": "text", "bbox": [0.08, 0.42, 0.18, 0.08], "text": "Input", "strategy": "native-text", "z_index": 20, "parent": "input-panel", "style": { "font_size": 30, "font_weight": "700", "fill": "#1E3A8A" } },
+    { "id": "model-label", "type": "text", "bbox": [0.41, 0.42, 0.18, 0.1], "text": "Reasoning Core", "strategy": "native-text", "z_index": 20, "parent": "model-panel", "style": { "font_size": 25, "font_weight": "700", "fill": "#4C1D95" } },
+    { "id": "output-label", "type": "text", "bbox": [0.74, 0.42, 0.18, 0.08], "text": "Output", "strategy": "native-text", "z_index": 20, "parent": "output-panel", "style": { "font_size": 30, "font_weight": "700", "fill": "#14532D" } },
+    { "id": "flow-a", "type": "connector", "from": "input-panel", "to": "model-panel", "kind": "straight", "strategy": "native-shape", "z_index": 1, "style": { "stroke": "#475569", "stroke_width": 4 } },
+    { "id": "flow-b", "type": "connector", "from": "model-panel", "to": "output-panel", "kind": "straight", "strategy": "native-shape", "z_index": 1, "style": { "stroke": "#475569", "stroke_width": 4 } }
+  ]
+}

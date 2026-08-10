@@ -1,0 +1,9 @@
+node_modules/
+runs/
+coverage/
+.DS_Store
+*.log
+*.tmp
+*.zip
+tests/private-fixtures/
+plugins/paper-diagram-forge/skills/build-paper-framework-diagrams/assets/private/

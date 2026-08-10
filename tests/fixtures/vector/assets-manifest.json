@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0",
+  "jobs": [
+    { "id": "input-component", "strategy": "native-shape", "vector_kind": "native-vector", "bbox": [0.06, 0.31, 0.22, 0.32], "source_element_ids": ["input-panel", "input-label"], "status": "completed", "source": { "kind": "scene-graph" }, "editable_level": "full" },
+    { "id": "model-component", "strategy": "native-shape", "vector_kind": "native-vector", "bbox": [0.39, 0.25, 0.22, 0.44], "source_element_ids": ["model-panel", "model-label"], "status": "completed", "source": { "kind": "scene-graph" }, "editable_level": "full" },
+    { "id": "output-component", "strategy": "native-shape", "vector_kind": "native-vector", "bbox": [0.72, 0.31, 0.22, 0.32], "source_element_ids": ["output-panel", "output-label"], "status": "completed", "source": { "kind": "scene-graph" }, "editable_level": "full" }
+  ]
+}

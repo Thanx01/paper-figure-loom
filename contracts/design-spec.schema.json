@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://paper-diagram-forge.dev/schemas/design-spec.schema.json",
+  "title": "Paper Diagram Forge design contract",
+  "type": "object",
+  "required": ["schema_version", "canvas", "required_modules", "required_connections", "verbatim_text"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "canvas": {
+      "type": "object",
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "required_modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "scene_element_id": { "type": "string", "minLength": 1 },
+          "label": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "required_connections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "from", "to"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "scene_element_id": { "type": "string", "minLength": 1 },
+          "from": { "type": "string", "minLength": 1 },
+          "to": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": true
+      }
+    },
+    "verbatim_text": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          { "type": "string" },
+          {
+            "type": "object",
+            "required": ["text"],
+            "properties": { "text": { "type": "string" } },
+            "additionalProperties": true
+          }
+        ]
+      }
+    },
+    "expected_geometry": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "number" },
+        "minItems": 4,
+        "maxItems": 4
+      }
+    },
+    "style_constraints": { "type": "object" },
+    "invariants": { "type": "object" }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://paper-diagram-forge.dev/schemas/assets-manifest.schema.json",
+  "title": "Paper Diagram Forge asset manifest",
+  "type": "object",
+  "required": ["schema_version", "jobs"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "jobs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "strategy", "vector_kind", "bbox", "source_element_ids", "source", "editable_level"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "strategy": { "enum": ["native-text", "native-shape", "direct-extract", "regenerate-grounded"] },
+          "vector_kind": { "enum": ["native-vector", "embedded-raster"] },
+          "bbox": {
+            "type": "array",
+            "items": { "type": "number" },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "source_element_ids": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "minItems": 1
+          },
+          "source": {
+            "type": "object",
+            "required": ["kind"],
+            "properties": { "kind": { "type": "string", "minLength": 1 } },
+            "additionalProperties": true
+          },
+          "editable_level": { "enum": ["full", "geometry-and-style", "position-and-scale", "none"] },
+          "status": { "enum": ["pending", "completed", "blocked"] },
+          "prompt": { "type": ["string", "null"] },
+          "output_svg": { "type": "string" },
+          "output_png": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

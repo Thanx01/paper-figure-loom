@@ -1,0 +1,21 @@
+{
+  "name": "paper-diagram-forge-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.16.0",
+  "description": "Development and replay-test workspace for the Paper Diagram Forge Codex plugin.",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "test:replay": "node --test tests/replay.test.mjs",
+    "validate": "node tests/validate-repo.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "jszip": "3.10.1",
+    "pixelmatch": "7.2.0",
+    "sharp": "0.34.5"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "canvas": { "width": 960, "height": 540 },
+  "required_modules": [
+    { "id": "input-panel", "scene_element_id": "input-panel", "label": "Input" },
+    { "id": "model-panel", "scene_element_id": "model-panel", "label": "Model" },
+    { "id": "output-panel", "scene_element_id": "output-panel", "label": "Output" }
+  ],
+  "required_connections": [
+    { "id": "flow-a", "scene_element_id": "flow-a", "from": "input-panel", "to": "model-panel" },
+    { "id": "flow-b", "scene_element_id": "flow-b", "from": "model-panel", "to": "output-panel" }
+  ],
+  "verbatim_text": {
+    "input-label": "Input",
+    "model-label": "Reasoning Core",
+    "output-label": "Output"
+  },
+  "expected_geometry": {
+    "input-panel": [0.06, 0.31, 0.22, 0.32],
+    "model-panel": [0.39, 0.25, 0.22, 0.44],
+    "output-panel": [0.72, 0.31, 0.22, 0.32],
+    "input-label": [0.08, 0.42, 0.18, 0.08],
+    "model-label": [0.41, 0.42, 0.18, 0.1],
+    "output-label": [0.74, 0.42, 0.18, 0.08]
+  },
+  "style_constraints": { "theme": "original synthetic blue" },
+  "invariants": { "preserve_aspect_ratio": true, "native_text": true, "no_stretched_assets": true }
+}

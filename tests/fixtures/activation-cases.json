@@ -1,0 +1,29 @@
+[
+  {
+    "id": "direct",
+    "request": "$build-paper-framework-diagrams rebuild this attached framework figure as editable PPTX",
+    "should_activate": true
+  },
+  {
+    "id": "implicit",
+    "request": "Turn this paper architecture image into a faithful editable PowerPoint with reusable SVG icons",
+    "should_activate": true
+  },
+  {
+    "id": "missing-input",
+    "request": "Please rebuild a framework diagram, but no paper, prompt, or image is attached",
+    "should_activate": true,
+    "expected_result": "request_input"
+  },
+  {
+    "id": "unrelated",
+    "request": "Summarize my email inbox",
+    "should_activate": false
+  },
+  {
+    "id": "resume",
+    "request": "Resume the interrupted Paper Diagram Forge run from its run-state.json",
+    "should_activate": true,
+    "expected_result": "resume"
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "name": "paper-diagram-forge",
+  "version": "0.1.0",
+  "description": "Turn framework-diagram masters into editable PowerPoint, honest hybrid SVG assets, and visual QA evidence.",
+  "author": {
+    "name": "Paper Diagram Forge contributors"
+  },
+  "license": "MIT",
+  "keywords": ["diagram", "paper", "powerpoint", "svg", "visual-qa"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Paper Diagram Forge",
+    "shortDescription": "Rebuild framework diagrams as editable PPTX and SVG",
+    "longDescription": "Generate or ingest a framework-diagram master, inventory reusable visual assets, rebuild the composition with editable text and shapes, and deliver visual QA evidence.",
+    "developerName": "Paper Diagram Forge contributors",
+    "category": "Productivity",
+    "capabilities": ["Create", "Write", "Image Generation", "Presentations"],
+    "defaultPrompt": [
+      "Rebuild this framework diagram as editable PPTX and hybrid SVG assets.",
+      "Create a paper framework diagram from this paper and verify the final PPTX."
+    ]
+  }
+}
