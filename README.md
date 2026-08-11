@@ -8,6 +8,8 @@ Paper Figure Loom turns a handoff that used to bounce between GPT, downloads, an
 
 Provide a paper or a master image and review the final result. There is no repeated “continue generating,” no manual asset download, and no ZIP handoff to another task.
 
+![Paper Figure Loom workflow: canonical master, fine-grained transparent assets, editable recomposition, visual QA, and delivery](docs/paper-figure-loom-workflow.svg)
+
 ## The workflow this Skill actually runs
 
 The order is fixed. None of the three phases is optional.

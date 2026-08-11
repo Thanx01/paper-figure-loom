@@ -8,6 +8,8 @@ Paper Figure Loom 把一套原本需要在 GPT、下载目录和本地 Codex 之
 
 你只需要提供论文或母图，最后验收结果。中间不用反复发送“继续生成”，不用手工下载素材包，也不用再把压缩包转交给另一个任务。
 
+![Paper Figure Loom 工作流：确定母图、逐一生成细粒度透明素材、原位拼回可编辑框架图、视觉验收与交付](docs/paper-figure-loom-workflow.svg)
+
 ## 这套 Skill 严格做什么
 
 整条工作流固定分成三步，顺序不会省略。

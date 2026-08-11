@@ -6,6 +6,7 @@ import { repoRoot } from "./helpers.mjs";
 
 const englishPath = path.join(repoRoot, "README.md");
 const chinesePath = path.join(repoRoot, "README_CN.md");
+const workflowPath = path.join(repoRoot, "docs/paper-figure-loom-workflow.svg");
 
 test("English and Chinese READMEs link to each other and document real usage", async () => {
   const [english, chinese] = await Promise.all([
@@ -17,6 +18,7 @@ test("English and Chinese READMEs link to each other and document real usage", a
   assert.match(chinese, /\[English\]\(README\.md\)/);
 
   for (const readme of [english, chinese]) {
+    assert.match(readme, /docs\/paper-figure-loom-workflow\.svg/);
     assert.match(readme, /codex plugin marketplace add Thanx01\/paper-figure-loom --ref main/);
     assert.match(readme, /\$rebuild-paper-figures/);
     assert.match(readme, /forge\.mjs init/);
@@ -24,4 +26,16 @@ test("English and Chinese READMEs link to each other and document real usage", a
     assert.match(readme, /run-state\.json/);
     assert.match(readme, /paper-figure-loom-delivery\.zip/);
   }
+});
+
+test("README workflow graphic is self-contained and scalable", async () => {
+  const workflow = await fs.readFile(workflowPath, "utf8");
+  assert.match(workflow, /<svg\b[^>]*viewBox="0 0 1800 960"/);
+  assert.match(workflow, /Paper Figure Loom workflow/);
+  assert.match(workflow, /CANONICAL MASTER/);
+  assert.match(workflow, /TRANSPARENT ASSETS/);
+  assert.match(workflow, /EDITABLE REBUILD/);
+  assert.match(workflow, /RENDER &amp; VISUAL QA/);
+  assert.doesNotMatch(workflow, /(?:href|src)="(?:https?:|file:)/i);
+  assert.doesNotMatch(workflow, /<image\b/i);
 });
