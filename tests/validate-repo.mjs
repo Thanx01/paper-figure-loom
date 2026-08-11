@@ -15,6 +15,7 @@ const required = [
   "contracts/assets-manifest.schema.json",
   "contracts/master-candidates.schema.json",
   "README.md",
+  "README_CN.md",
   "LICENSE",
 ];
 
