@@ -6,4 +6,4 @@ coverage/
 *.tmp
 *.zip
 tests/private-fixtures/
-plugins/paper-diagram-forge/skills/build-paper-framework-diagrams/assets/private/
+plugins/paper-figure-studio/skills/craft-paper-figures/assets/private/

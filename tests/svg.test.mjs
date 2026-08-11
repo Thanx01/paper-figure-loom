@@ -2,9 +2,9 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
-import { writeAssetSvgs, writeCompositeSvg } from "../plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/lib/svg.mjs";
+import { writeAssetSvgs, writeCompositeSvg } from "../plugins/paper-figure-studio/skills/craft-paper-figures/scripts/lib/svg.mjs";
 import { fixturePath, json, temporaryDirectory } from "./helpers.mjs";
-import { loadSharp } from "../plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/lib/runtime.mjs";
+import { loadSharp } from "../plugins/paper-figure-studio/skills/craft-paper-figures/scripts/lib/runtime.mjs";
 
 test("native SVGs contain paths/shapes while hybrid SVGs disclose embedded PNG", async () => {
   const runDir = await temporaryDirectory("paper-diagram-svg-");

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://paper-diagram-forge.dev/schemas/scene-graph.schema.json",
+  "$id": "https://paper-figure-studio.dev/schemas/scene-graph.schema.json",
   "title": "Paper Figure Studio scene graph",
   "type": "object",
   "required": ["schema_version", "canvas", "elements"],

@@ -53,7 +53,7 @@ The first route is called `rebuild` in the run files. The second is called `auth
 Add this GitHub repository as a Codex plugin marketplace:
 
 ```bash
-codex plugin marketplace add Thanx01/paper-diagram-forge --ref main
+codex plugin marketplace add Thanx01/paper-figure-studio --ref main
 ```
 
 Restart Codex Desktop, open **Plugins**, choose the **personal** marketplace, and install **Paper Figure Studio**.
@@ -61,8 +61,8 @@ Restart Codex Desktop, open **Plugins**, choose the **personal** marketplace, an
 To work from a local clone instead:
 
 ```bash
-git clone https://github.com/Thanx01/paper-diagram-forge.git
-codex plugin marketplace add /absolute/path/to/paper-diagram-forge
+git clone https://github.com/Thanx01/paper-figure-studio.git
+codex plugin marketplace add /absolute/path/to/paper-figure-studio
 ```
 
 Paper Figure Studio currently runs in Codex Desktop local mode and uses Codex's built-in image generation. It does not ask for an `OPENAI_API_KEY`.
@@ -118,7 +118,7 @@ This distinction matters. A useful editable figure is better than a perfect scre
 <details>
 <summary>Run files, CLI, tests, and validation</summary>
 
-The user-facing Skill lives at `plugins/paper-diagram-forge/skills/craft-paper-figures`. Public JSON contracts live in [`contracts/`](contracts/).
+The user-facing Skill lives at `plugins/paper-figure-studio/skills/craft-paper-figures`. Public JSON contracts live in [`contracts/`](contracts/).
 
 Codex normally drives the state machine. For diagnostics, create a `request.json` with absolute paths:
 
@@ -133,11 +133,11 @@ Codex normally drives the state machine. For diagnostics, create a `request.json
 Then use the Node executable bundled with Codex Desktop:
 
 ```bash
-<bundled-node> plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/forge.mjs init \
+<bundled-node> plugins/paper-figure-studio/skills/craft-paper-figures/scripts/forge.mjs init \
   --request /absolute/path/to/request.json \
   --run-dir /absolute/path/to/run
 
-<bundled-node> plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/forge.mjs next \
+<bundled-node> plugins/paper-figure-studio/skills/craft-paper-figures/scripts/forge.mjs next \
   --run-dir /absolute/path/to/run
 ```
 

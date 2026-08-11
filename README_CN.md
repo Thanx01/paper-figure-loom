@@ -52,7 +52,7 @@ Paper Figure Studio 把这些动作收进一次 Codex 任务。你只需要提�
 把这个 GitHub 仓库添加为 Codex 插件市场：
 
 ```bash
-codex plugin marketplace add Thanx01/paper-diagram-forge --ref main
+codex plugin marketplace add Thanx01/paper-figure-studio --ref main
 ```
 
 重启 Codex Desktop，打开 **Plugins（插件）**，选择 **personal（个人）** 市场，然后安装 **Paper Figure Studio**。
@@ -60,8 +60,8 @@ codex plugin marketplace add Thanx01/paper-diagram-forge --ref main
 如果要从本地仓库安装：
 
 ```bash
-git clone https://github.com/Thanx01/paper-diagram-forge.git
-codex plugin marketplace add /absolute/path/to/paper-diagram-forge
+git clone https://github.com/Thanx01/paper-figure-studio.git
+codex plugin marketplace add /absolute/path/to/paper-figure-studio
 ```
 
 Paper Figure Studio 目前运行在 Codex Desktop 本地模式中，直接使用 Codex 内置的图像生成能力，不需要配置 `OPENAI_API_KEY`。
@@ -117,7 +117,7 @@ Paper Figure Studio 目前运行在 Codex Desktop 本地模式中，直接使用
 <details>
 <summary>运行文件、命令行和测试方式</summary>
 
-用户调用的 Skill 位于 `plugins/paper-diagram-forge/skills/craft-paper-figures`，公开 JSON 契约位于 [`contracts/`](contracts/) 中。
+用户调用的 Skill 位于 `plugins/paper-figure-studio/skills/craft-paper-figures`，公开 JSON 契约位于 [`contracts/`](contracts/) 中。
 
 Codex 通常会自动驱动状态机。排查问题时，可以用绝对路径创建 `request.json`：
 
@@ -132,11 +132,11 @@ Codex 通常会自动驱动状态机。排查问题时，可以用绝对路径�
 然后使用 Codex Desktop 自带的 Node：
 
 ```bash
-<bundled-node> plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/forge.mjs init \
+<bundled-node> plugins/paper-figure-studio/skills/craft-paper-figures/scripts/forge.mjs init \
   --request /absolute/path/to/request.json \
   --run-dir /absolute/path/to/run
 
-<bundled-node> plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/forge.mjs next \
+<bundled-node> plugins/paper-figure-studio/skills/craft-paper-figures/scripts/forge.mjs next \
   --run-dir /absolute/path/to/run
 ```
 

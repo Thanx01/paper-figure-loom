@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
-import { dependencyReport } from "../plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/lib/runtime.mjs";
-import { inspectPptxEditability } from "../plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/lib/qa.mjs";
+import { dependencyReport } from "../plugins/paper-figure-studio/skills/craft-paper-figures/scripts/lib/runtime.mjs";
+import { inspectPptxEditability } from "../plugins/paper-figure-studio/skills/craft-paper-figures/scripts/lib/qa.mjs";
 import { prepareRecordedRun, runForge } from "./helpers.mjs";
 
 test("Codex Desktop artifact-tool builds a rendered editable PPTX", async (context) => {

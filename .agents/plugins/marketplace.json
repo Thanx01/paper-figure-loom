@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "paper-diagram-forge",
+      "name": "paper-figure-studio",
       "source": {
         "source": "local",
-        "path": "./plugins/paper-diagram-forge"
+        "path": "./plugins/paper-figure-studio"
       },
       "policy": {
         "installation": "AVAILABLE",

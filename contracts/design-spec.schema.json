@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://paper-diagram-forge.dev/schemas/design-spec.schema.json",
+  "$id": "https://paper-figure-studio.dev/schemas/design-spec.schema.json",
   "title": "Paper Figure Studio design contract",
   "type": "object",
   "required": ["schema_version", "canvas", "required_modules", "required_connections", "verbatim_text"],

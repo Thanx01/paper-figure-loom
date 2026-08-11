@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
-import { loadJszip } from "../plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/lib/runtime.mjs";
+import { loadJszip } from "../plugins/paper-figure-studio/skills/craft-paper-figures/scripts/lib/runtime.mjs";
 import { json, prepareRecordedRun, runForge, writeRecordedEditablePptx } from "./helpers.mjs";
 
 for (const fixture of ["vector", "hybrid"]) {

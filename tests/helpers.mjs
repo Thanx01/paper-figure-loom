@@ -4,15 +4,15 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { execFile } from "node:child_process";
-import { loadJszip, loadSharp } from "../plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/lib/runtime.mjs";
-import { renderSceneSvg } from "../plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/lib/svg.mjs";
+import { loadJszip, loadSharp } from "../plugins/paper-figure-studio/skills/craft-paper-figures/scripts/lib/runtime.mjs";
+import { renderSceneSvg } from "../plugins/paper-figure-studio/skills/craft-paper-figures/scripts/lib/svg.mjs";
 
 const execFileAsync = promisify(execFile);
 const here = path.dirname(fileURLToPath(import.meta.url));
 export const repoRoot = path.resolve(here, "..");
 export const forgePath = path.join(
   repoRoot,
-  "plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/forge.mjs",
+  "plugins/paper-figure-studio/skills/craft-paper-figures/scripts/forge.mjs",
 );
 
 export async function json(filePath) {
@@ -23,7 +23,7 @@ export function fixturePath(name, fileName) {
   return path.join(repoRoot, "tests", "fixtures", name, fileName);
 }
 
-export async function temporaryDirectory(prefix = "paper-diagram-forge-") {
+export async function temporaryDirectory(prefix = "paper-figure-studio-") {
   return fs.mkdtemp(path.join(os.tmpdir(), prefix));
 }
 

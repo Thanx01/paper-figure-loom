@@ -16,7 +16,7 @@ Finish the figure in one run without asking for intermediate approval. Stop earl
 ## Initialize the run
 
 1. Call `load_workspace_dependencies` and use its bundled Node executable and Node packages path.
-2. Set `PAPER_DIAGRAM_FORGE_NODE_MODULES` to the returned Node packages path.
+2. Set `PAPER_FIGURE_STUDIO_NODE_MODULES` to the returned Node packages path.
 3. Initialize an artifact-tool workspace with the presentation skill's `container_tools/setup_artifact_tool_workspace.mjs --workspace <run-parent>` helper.
 4. Create `request.json` from the user request. Use absolute source paths, a dedicated run directory, and an optional separate `output_dir` for final copies.
 5. Run:
