@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
-import { atomicWriteJson } from "../plugins/paper-diagram-forge/skills/build-paper-framework-diagrams/scripts/lib/common.mjs";
-import { createState, invalidateDownstream, nextAction, saveState, setStage } from "../plugins/paper-diagram-forge/skills/build-paper-framework-diagrams/scripts/lib/state.mjs";
+import { atomicWriteJson } from "../plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/lib/common.mjs";
+import { createState, invalidateDownstream, nextAction, saveState, setStage } from "../plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/lib/state.mjs";
 import { temporaryDirectory } from "./helpers.mjs";
 
 const request = {

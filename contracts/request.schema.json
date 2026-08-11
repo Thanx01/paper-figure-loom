@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://paper-diagram-forge.local/contracts/request.schema.json",
-  "title": "Paper Diagram Forge request",
+  "title": "Paper Figure Studio request",
   "type": "object",
   "required": ["mode"],
   "properties": {

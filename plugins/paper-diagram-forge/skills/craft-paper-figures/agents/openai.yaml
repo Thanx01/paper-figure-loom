@@ -1,0 +1,4 @@
+interface:
+  display_name: "Craft Paper Figures"
+  short_description: "Turn papers or references into editable figures"
+  default_prompt: "Use $craft-paper-figures to turn the attached paper or reference figure into an editable, checked PowerPoint."

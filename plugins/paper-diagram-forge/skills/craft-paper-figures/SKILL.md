@@ -1,11 +1,11 @@
 ---
-name: build-paper-framework-diagrams
-description: Generate or ingest a single-page academic or technical framework-diagram master, decompose it into reusable honest-hybrid SVG/PNG assets, rebuild it as an editable PPTX and composite SVG, run element-level visual QA and bounded repair loops, and package final evidence. Use for model architecture figures, method overview figures, system diagrams, framework images, editable PowerPoint reconstruction, icon/UI extraction, or paper-to-diagram requests.
+name: craft-paper-figures
+description: Turn an existing academic figure, paper, prompt, or style reference into an editable single-slide PowerPoint with reusable SVG/PNG assets and visual comparison evidence. Use for paper method figures, model architecture diagrams, system or framework overviews, faithful PowerPoint reconstruction, icon or UI extraction, and paper-to-figure requests.
 ---
 
-# Build Paper Framework Diagrams
+# Craft Paper Figures
 
-Run the complete workflow without asking for intermediate approval. Stop early only when the required input is unreadable or a required built-in capability is unavailable. Never silently switch to an API-key-backed image workflow.
+Finish the figure in one run without asking for intermediate approval. Stop early only when the required input is unreadable or a required built-in capability is unavailable. Never silently switch to an API-key-backed image workflow.
 
 ## Select the mode
 

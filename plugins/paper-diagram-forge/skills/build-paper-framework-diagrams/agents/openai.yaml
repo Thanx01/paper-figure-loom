@@ -1,4 +1,0 @@
-interface:
-  display_name: "Build Paper Framework Diagrams"
-  short_description: "Rebuild framework diagrams as editable PPTX/SVG"
-  default_prompt: "Use $build-paper-framework-diagrams to rebuild this framework diagram as editable PPTX and hybrid SVG assets."

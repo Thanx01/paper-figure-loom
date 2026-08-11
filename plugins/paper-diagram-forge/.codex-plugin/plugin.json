@@ -1,23 +1,26 @@
 {
   "name": "paper-diagram-forge",
   "version": "0.1.0",
-  "description": "Turn framework-diagram masters into editable PowerPoint, honest hybrid SVG assets, and visual QA evidence.",
+  "description": "Turn a paper or reference figure into an editable PowerPoint, reusable visual assets, and a visual comparison report.",
   "author": {
-    "name": "Paper Diagram Forge contributors"
+    "name": "Paper Figure Studio contributors"
   },
+  "homepage": "https://github.com/Thanx01/paper-diagram-forge",
+  "repository": "https://github.com/Thanx01/paper-diagram-forge",
   "license": "MIT",
-  "keywords": ["diagram", "paper", "powerpoint", "svg", "visual-qa"],
+  "keywords": ["academic-figure", "diagram", "paper", "powerpoint", "svg"],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Paper Diagram Forge",
-    "shortDescription": "Rebuild framework diagrams as editable PPTX and SVG",
-    "longDescription": "Generate or ingest a framework-diagram master, inventory reusable visual assets, rebuild the composition with editable text and shapes, and deliver visual QA evidence.",
-    "developerName": "Paper Diagram Forge contributors",
+    "displayName": "Paper Figure Studio",
+    "shortDescription": "Turn papers and reference figures into editable slides",
+    "longDescription": "Give Paper Figure Studio a paper, an idea, or an existing framework figure. It returns an editable PowerPoint, reusable visual assets, and comparison images that show how closely the result matches the source.",
+    "developerName": "Paper Figure Studio contributors",
     "category": "Productivity",
     "capabilities": ["Create", "Write", "Image Generation", "Presentations"],
+    "websiteURL": "https://github.com/Thanx01/paper-diagram-forge",
     "defaultPrompt": [
-      "Rebuild this framework diagram as editable PPTX and hybrid SVG assets.",
-      "Create a paper framework diagram from this paper and verify the final PPTX."
+      "Turn this reference figure into an editable PowerPoint and check it against the original.",
+      "Read this paper and create an editable method figure with reusable visual assets."
     ]
   }
 }

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
-import { loadJszip } from "../plugins/paper-diagram-forge/skills/build-paper-framework-diagrams/scripts/lib/runtime.mjs";
+import { loadJszip } from "../plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/lib/runtime.mjs";
 import { json, prepareRecordedRun, runForge, writeRecordedEditablePptx } from "./helpers.mjs";
 
 for (const fixture of ["vector", "hybrid"]) {
@@ -22,7 +22,7 @@ for (const fixture of ["vector", "hybrid"]) {
     assert.equal(state.status, "completed");
     assert.equal((await runForge(["next", "--run-dir", runDir])).action, "deliver");
     if (deliveryDir) {
-      for (const delivered of ["framework.pptx", "framework.svg", "framework.png", "paper-diagram-forge-delivery.zip", "assets/png", "assets/svg", "qa"]) {
+      for (const delivered of ["framework.pptx", "framework.svg", "framework.png", "paper-figure-studio-delivery.zip", "assets/png", "assets/svg", "qa"]) {
         await fs.access(path.join(deliveryDir, delivered));
       }
     }

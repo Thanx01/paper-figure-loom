@@ -1,140 +1,126 @@
-# Paper Diagram Forge
+# Paper Figure Studio
 
 **English** | [简体中文](README_CN.md)
 
-Paper Diagram Forge is a Codex Desktop plugin for producing editable, publication-ready, single-page academic framework diagrams. It can either reconstruct an existing master image or create a canonical master from a paper, prompt, and style references before rebuilding it.
+**Turn a paper figure into a PowerPoint you can actually edit.**
 
-One Skill call drives the complete workflow: design contract, master selection, two-pass scene decomposition, asset generation or extraction, editable PPTX construction, hybrid SVG export, visual QA, bounded repairs, and final packaging.
+Give Paper Figure Studio a reference image—or a paper and an idea. It gives you back an editable, one-slide PowerPoint, separate visual assets, and comparison images that show how closely the result matches the source.
 
-## What you receive
+## Why Paper Figure Studio exists
 
-Every successful run delivers:
+Academic figures often reach their final form as a flat PNG. At that point, changing one label, moving one arrow, or reusing one icon means rebuilding the whole figure.
 
-- `framework.pptx` — the authoritative editable result;
-- `framework.svg` and `framework.png` — composite exports;
-- `assets/png/` and `assets/svg/` — reusable child assets;
-- `assets-manifest.json` — source, vector type, and editability metadata for every asset;
-- `qa/` and `qa-report.json` — side-by-side, overlay, heatmap, bounding-box, and gate evidence;
-- `paper-diagram-forge-delivery.zip` — the complete delivery package.
+The usual workaround is just as awkward: ask an image model for cutouts, download them in batches, convert them to SVG, unpack everything locally, rebuild the slide, and repeat whenever something is missed.
 
-## Design guarantees
+Paper Figure Studio turns that handoff into one Codex task. You provide the source once and review the result at the end.
 
-- Text, panels, and connectors remain native PowerPoint objects.
-- Complex illustrations may remain raster images inside both PPTX and SVG.
-- Every SVG asset declares whether it is `native-vector` or `embedded-raster`.
-- The full master image is never used as a hidden slide-sized fidelity shortcut.
-- Live image generation uses Codex's built-in image-generation capability; no `OPENAI_API_KEY` is required.
-- Interrupted work resumes from atomic `run-state.json` checkpoints.
-- Explicit user text and paper semantics take precedence over incorrect text detected in a master image.
+## Try it in one message
 
-## Requirements
+### I already have a figure
 
-- Codex Desktop in local mode.
-- A master image for `rebuild` mode, or at least one paper PDF, prompt, or style reference for `author` mode.
-- PowerPoint is recommended for the final human review, but it is not required to run the automated pipeline.
+Attach the image and send:
 
-The first release does not provide a standalone API-key runner or headless cloud service.
+```text
+Use $craft-paper-figures to turn the attached figure into an editable PowerPoint.
+Keep the wording, layout, and colors. Make the labels, boxes, and arrows individually editable,
+export reusable icons separately, compare the finished slide with the original, and return only
+the final files.
+```
+
+### I have a paper or an idea
+
+Attach the paper and any style references, then send:
+
+```text
+Use $craft-paper-figures to read the attached paper and create a clear, single-page method figure.
+Use the attached images as style references. Keep all labels editable, check the finished slide,
+and return the PowerPoint together with the reusable visual assets.
+```
+
+That is the normal workflow. You do not need to run the build script yourself or keep sending “continue.”
+
+## Choose your starting point
+
+| You have | Paper Figure Studio will | Best for |
+| --- | --- | --- |
+| A finished PNG/JPG figure | Rebuild its wording, composition, colors, arrows, and reusable parts | Revising a published figure or recovering an editable source |
+| A paper, prompt, or rough idea | Draft several complete figure directions, choose a viable one, then rebuild it | Creating a new method or system overview |
+
+The first route is called `rebuild` in the run files. The second is called `author`. You only need those terms when inspecting or scripting a run.
 
 ## Install
 
-### From GitHub
-
-Add this repository as a personal marketplace source:
+Add this GitHub repository as a Codex plugin marketplace:
 
 ```bash
 codex plugin marketplace add Thanx01/paper-diagram-forge --ref main
 ```
 
-Restart Codex Desktop, open **Plugins**, select the **personal** marketplace, and install **Paper Diagram Forge**.
+Restart Codex Desktop, open **Plugins**, choose the **personal** marketplace, and install **Paper Figure Studio**.
 
-### From a local clone
+To work from a local clone instead:
 
 ```bash
 git clone https://github.com/Thanx01/paper-diagram-forge.git
 codex plugin marketplace add /absolute/path/to/paper-diagram-forge
 ```
 
-Restart Codex Desktop and install the plugin from the **personal** marketplace. The marketplace manifest automatically resolves the plugin under `plugins/paper-diagram-forge`.
+Paper Figure Studio currently runs in Codex Desktop local mode and uses Codex's built-in image generation. It does not ask for an `OPENAI_API_KEY`.
 
-## Quick start
+## What comes back
 
-For normal use, do not run `forge.mjs` manually. Start a Codex task, attach the source files, and invoke the Skill once. The Skill continues through all non-interactive stages and returns only a successful delivery or a concrete blocker package.
+- `framework.pptx` — the main editable file;
+- `framework.svg` and `framework.png` — the complete figure for other tools;
+- `assets/svg/` and `assets/png/` — icons, illustrations, and reusable components;
+- `assets-manifest.json` — a plain record of where each asset came from and how editable it is;
+- `qa/` and `qa-report.json` — side-by-side, overlay, and difference views for checking the result;
+- `paper-figure-studio-delivery.zip` — everything above in one download.
 
-### Rebuild an existing diagram
+If the figure cannot pass its checks, Paper Figure Studio returns a blocker package with the failed checks and saved run state. It does not label an unfinished figure as successful.
 
-Attach the master image and send:
+## What stays editable
 
-```text
-$build-paper-framework-diagrams
-Rebuild the attached framework diagram as an editable PPTX and honest hybrid SVG assets.
-Preserve its text, structure, relative layout, colors, and aspect ratio. Run automated QA
-and return the final delivery package only.
-```
+Text, boxes, panels, and arrows are rebuilt as real PowerPoint objects. You can select them, rewrite them, recolor them, or move them after delivery.
 
-The master controls layout and visual style. Explicit corrections in your message control the final editable text and diagram semantics.
+Complex artwork is handled honestly. A character, textured card, or detailed illustration may remain a transparent PNG inside the slide and inside its SVG wrapper. The asset manifest says so. Paper Figure Studio never calls a PNG “fully vector,” and it never hides the original full-page image over the slide to fake a match.
 
-### Author a diagram from a paper or prompt
+## What happens after you send the prompt
 
-Attach the paper PDF and any optional style-reference images, then send:
+1. It locks the exact wording, required sections, and connections before drawing.
+2. It reads the figure twice: once for the main structure, then again for small icons, decoration, and overlapping details that are easy to miss.
+3. It redraws simple parts and extracts or regenerates complex artwork with the source figure as a visual reference.
+4. It builds the slide, renders it, compares it with the source, and fixes only the parts that failed.
+5. It packages the editable figure, separate assets, and comparison evidence.
 
-```text
-$build-paper-framework-diagrams
-Read the attached paper and create a single-page 16:9 method framework diagram in the
-style of the attached references. Keep all labels editable, generate and evaluate the
-master candidates, rebuild the selected master, run QA, and return the final package only.
-```
-
-You can also provide a detailed text prompt without a PDF. Author mode generates three candidates by default, permits one targeted retry if all candidates fail, and then sends the selected canonical master through the same rebuild pipeline.
-
-### Resume an interrupted run
-
-Keep the run directory and ask Codex:
+The run is saved after every stage. If Codex is interrupted, point it at the same run directory:
 
 ```text
-$build-paper-framework-diagrams
-Resume the interrupted Paper Diagram Forge run at /absolute/path/to/run-directory.
-Use its existing run-state.json and do not repeat completed stages or validated assets.
+Use $craft-paper-figures to resume the run in /absolute/path/to/run-directory.
+Keep the completed work and continue from run-state.json.
 ```
 
-Stage writes are atomic and idempotent. Validated stages and assets are skipped after a restart.
+## What “1:1” means here
 
-## Input reference
+For text, structure, layout, and directly extracted artwork, “1:1” means matching the source within the repository's declared tolerances. For artwork that must be regenerated, it means a close visual match in the same region—not identical pixels.
 
-| Input | Rebuild | Author | Meaning |
-| --- | --- | --- | --- |
-| `mode` | `rebuild` | `author` | Selects the workflow. |
-| `master_image` | Required | Not used | Absolute path to the canonical source image. |
-| `paper_pdf` | Optional semantic source | Optional | Absolute path to a paper PDF. |
-| `prompt` | Optional corrections | Optional | Diagram requirements, exact text, or style direction. |
-| `style_references` | Optional | Optional | Absolute paths to reference images. |
-| `aspect_ratio` | Preserved from master | Defaults to `16:9` | Output canvas ratio. |
-| `output_dir` | Optional | Optional | Directory that receives final delivery copies. |
+This distinction matters. A useful editable figure is better than a perfect screenshot pretending to be editable.
 
-Default budgets are three master candidates, one candidate retry round, at most 32 generated complex assets, two attempts per asset, and three repair rounds. They can be overridden in `request.json` when a specialized run requires it.
+## Current limits
 
-## What runs automatically
+- One figure and one PowerPoint slide per run.
+- PowerPoint is the editable source of truth; VSDX is not produced.
+- Recreated complex artwork can match the role, placement, palette, and visual weight of the source, but not every pixel.
+- Live image generation runs in Codex Desktop, not in GitHub Actions.
+- `rebuild` is the current release focus. The paper-to-figure `author` route is implemented but remains the next hardening track.
 
-1. Build a design contract containing exact text, required modules, and required connections.
-2. Accept the supplied master or generate, score, and select a canonical master.
-3. Perform a semantic-structure pass and an unexplained-visual-residual pass.
-4. Classify every element as native text, native shape, direct extraction, or grounded regeneration.
-5. Build honest native-vector or embedded-raster SVG/PNG assets.
-6. Construct a single-slide PPTX with native text, panels, and connectors.
-7. Render and compare the result with element-level and global QA evidence.
-8. Repair only failing elements until the gates pass or the bounded repair budget ends.
-9. Produce a delivery ZIP, or a blocker ZIP with recoverable state and failed-gate details.
+## For contributors
 
-## QA and the meaning of “1:1”
+<details>
+<summary>Run files, CLI, tests, and validation</summary>
 
-“1:1” means that structure, layout, exact text, and directly extracted assets remain within the declared tolerances. Regenerated complex illustrations promise region-level visual consistency, not pixel identity.
+The user-facing Skill lives at `plugins/paper-diagram-forge/skills/craft-paper-figures`. Public JSON contracts live in [`contracts/`](contracts/).
 
-The hard gates require complete modules, connections, and exact text; no missing or duplicate assets; no unexpected overlaps, clipping, or out-of-bounds objects; native PPTX text/panels/connectors; safe self-contained SVG files; and configured global and element-level difference thresholds. A whole-slide master-image overlay cannot satisfy the editability gate.
-
-## Advanced: state-machine CLI
-
-This section is for development and recovery diagnostics. Codex Desktop normally discovers its bundled Node runtime and presentation dependencies automatically.
-
-Create a request file with absolute paths:
+Codex normally drives the state machine. For diagnostics, create a `request.json` with absolute paths:
 
 ```json
 {
@@ -144,75 +130,20 @@ Create a request file with absolute paths:
 }
 ```
 
-Author-mode example:
-
-```json
-{
-  "mode": "author",
-  "paper_pdf": "/absolute/path/to/paper.pdf",
-  "prompt": "Create a single-page editable 16:9 method overview.",
-  "style_references": ["/absolute/path/to/style.png"],
-  "aspect_ratio": "16:9"
-}
-```
-
-Use the bundled Node executable returned by the Codex Desktop workspace runtime:
+Then use the Node executable bundled with Codex Desktop:
 
 ```bash
-<bundled-node> plugins/paper-diagram-forge/skills/build-paper-framework-diagrams/scripts/forge.mjs init \
+<bundled-node> plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/forge.mjs init \
   --request /absolute/path/to/request.json \
   --run-dir /absolute/path/to/run
 
-<bundled-node> plugins/paper-diagram-forge/skills/build-paper-framework-diagrams/scripts/forge.mjs next \
+<bundled-node> plugins/paper-diagram-forge/skills/craft-paper-figures/scripts/forge.mjs next \
   --run-dir /absolute/path/to/run
 ```
 
-Continue executing the action returned by `next`. The full command surface is:
+Keep calling `next` and execute the action it returns. The available commands are `init`, `next`, `record`, `validate`, `build`, `qa`, and `package`. Do not edit `run-state.json` by hand.
 
-```text
-init     --request request.json [--run-dir path] [--resume]
-next     --run-dir path
-record   --run-dir path --stage design|master|scene|assets --artifact file
-record   --run-dir path --asset-id id (--artifact image [--key-color hex]|--from-master|--failed --reason text)
-validate --run-dir path
-build    --run-dir path [--skip-pptx]
-qa       --run-dir path
-package  --run-dir path
-```
-
-Do not edit `run-state.json` by hand. Image generation remains a Codex built-in tool action; the CLI intentionally does not pretend it can call a conversational image tool.
-
-## Troubleshooting
-
-- **The plugin is not listed:** restart Codex Desktop after adding the marketplace, then check the **personal** source.
-- **Presentation dependencies are unavailable:** run inside Codex Desktop local mode so the Skill can load the bundled runtime and `@oai/artifact-tool`.
-- **A generated asset repeatedly fails:** the attempt and reason are recorded; the run ends with a blocker package instead of silently substituting an unrelated image.
-- **QA does not pass:** inspect `qa-report.json` and the `qa/` comparison images. The repair loop changes only failing elements and stops at its configured limit.
-- **An SVG contains an `<image>` element:** this is expected for `embedded-raster` complex art and is declared in `assets-manifest.json`; it is not presented as a fully native vector.
-
-## Runtime contracts
-
-Public JSON contracts live under [`contracts/`](contracts/). A run persists:
-
-```text
-request.json
-design-spec.json
-master-candidates.json (author mode)
-canonical-master.png
-scene-graph.json
-assets-manifest.json
-run-state.json
-qa-report.json
-framework.pptx
-framework.svg
-framework.png
-assets/png/
-assets/svg/
-qa/
-paper-diagram-forge-delivery.zip
-```
-
-## Development
+Run the deterministic test suite with:
 
 ```bash
 pnpm install --frozen-lockfile
@@ -220,25 +151,10 @@ pnpm test
 pnpm run validate
 ```
 
-CI runs contract, state, SVG, documentation, and recorded replay tests without live image generation. Local release validation additionally uses the official Skill and Plugin validators and a Codex Desktop PPTX build.
+CI uses original synthetic fixtures and recorded assets; it does not call live image generation. Release checks additionally validate the Skill and plugin manifests and build a real editable PPTX inside Codex Desktop.
 
-The `tests/fixtures/vector` and `tests/fixtures/hybrid` diagrams are original synthetic fixtures. The desktop-only artifact-tool smoke test skips itself when the bundled runtime is unavailable; GitHub Actions still replays the complete deterministic state, SVG, QA, and package path with a recorded editable PPTX fixture.
-
-Place non-public historical fixtures under `tests/private-fixtures/`; that directory is ignored. Only original or redistribution-safe fixtures belong in the repository.
-
-## Current boundaries
-
-- One diagram canvas per run.
-- PPTX is the authoritative editable format; VSDX is not generated.
-- No GitHub Actions image generation and no headless OpenAI API backend.
-- Regenerated complex illustrations target region-level visual similarity, not pixel identity.
-
-## Roadmap
-
-- `v0.1 rebuild`: master-first reconstruction, honest hybrid assets, editable PPTX, bounded QA, and delivery/blocker packages.
-- `v1 author`: paper/prompt/style-reference master candidate generation and selection feeding the same rebuild engine.
-- Deferred: VSDX, multi-page decks, API-key batch operation, MCP service mode, and live generation in CI.
+</details>
 
 ## License
 
-MIT. Third-party or user-supplied inputs and generated run artifacts retain their own provenance and are not covered merely because the code is MIT licensed.
+MIT. User-provided papers, reference images, and generated run artifacts keep their own provenance and rights.
