@@ -1,8 +1,14 @@
 {
   "schema_version": "1.0",
+  "inventory": {
+    "granularity": "fine-grained",
+    "semantic_pass_complete": true,
+    "residual_pass_complete": true,
+    "unexplained_visuals": []
+  },
   "jobs": [
-    { "id": "encoder-component", "strategy": "native-shape", "vector_kind": "native-vector", "bbox": [0.06, 0.2, 0.3, 0.6], "source_element_ids": ["encoder-panel", "encoder-label"], "status": "completed", "source": { "kind": "scene-graph" }, "editable_level": "full" },
-    { "id": "decoder-component", "strategy": "native-shape", "vector_kind": "native-vector", "bbox": [0.64, 0.2, 0.3, 0.6], "source_element_ids": ["decoder-panel", "decoder-label"], "status": "completed", "source": { "kind": "scene-graph" }, "editable_level": "full" },
-    { "id": "grounded-visual-asset", "strategy": "direct-extract", "vector_kind": "embedded-raster", "bbox": [0.4, 0.34, 0.2, 0.25], "source_element_ids": ["grounded-visual"], "status": "pending", "source": { "kind": "canonical-master", "reference": "canonical-master.png" }, "editable_level": "position-and-scale" }
+    { "id": "encoder-component", "strategy": "native-shape", "vector_kind": "native-vector", "asset_role": "native-component", "bbox": [0.06, 0.2, 0.3, 0.6], "source_element_ids": ["encoder-panel", "encoder-label"], "status": "completed", "source": { "kind": "scene-graph" }, "editable_level": "full" },
+    { "id": "decoder-component", "strategy": "native-shape", "vector_kind": "native-vector", "asset_role": "native-component", "bbox": [0.64, 0.2, 0.3, 0.6], "source_element_ids": ["decoder-panel", "decoder-label"], "status": "completed", "source": { "kind": "scene-graph" }, "editable_level": "full" },
+    { "id": "grounded-visual-asset", "strategy": "regenerate-grounded", "vector_kind": "embedded-raster", "asset_role": "illustration", "background_requirement": "transparent", "bbox": [0.4, 0.34, 0.2, 0.25], "source_element_ids": ["grounded-visual"], "status": "pending", "prompt": "Regenerate only the two-token illustration from the marked master crop. Keep its coral, teal, navy, and white forms and its exact visual proportions. Put the isolated illustration on a perfectly flat #00FF00 background with no panel, label, shadow field, or extra object.", "source": { "kind": "imagegen", "reference": "canonical-master.png" }, "editable_level": "position-and-scale" }
   ]
 }

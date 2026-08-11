@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://paper-figure-studio.local/contracts/request.schema.json",
-  "title": "Paper Figure Studio request",
+  "$id": "https://paper-figure-loom.local/contracts/request.schema.json",
+  "title": "Paper Figure Loom request",
   "type": "object",
   "required": ["mode"],
   "properties": {

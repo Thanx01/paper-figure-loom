@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "paper-figure-studio",
+      "name": "paper-figure-loom",
       "source": {
         "source": "local",
-        "path": "./plugins/paper-figure-studio"
+        "path": "./plugins/paper-figure-loom"
       },
       "policy": {
         "installation": "AVAILABLE",

@@ -17,11 +17,11 @@ test("English and Chinese READMEs link to each other and document real usage", a
   assert.match(chinese, /\[English\]\(README\.md\)/);
 
   for (const readme of [english, chinese]) {
-    assert.match(readme, /codex plugin marketplace add Thanx01\/paper-figure-studio --ref main/);
-    assert.match(readme, /\$craft-paper-figures/);
+    assert.match(readme, /codex plugin marketplace add Thanx01\/paper-figure-loom --ref main/);
+    assert.match(readme, /\$rebuild-paper-figures/);
     assert.match(readme, /forge\.mjs init/);
     assert.match(readme, /forge\.mjs next/);
     assert.match(readme, /run-state\.json/);
-    assert.match(readme, /paper-figure-studio-delivery\.zip/);
+    assert.match(readme, /paper-figure-loom-delivery\.zip/);
   }
 });

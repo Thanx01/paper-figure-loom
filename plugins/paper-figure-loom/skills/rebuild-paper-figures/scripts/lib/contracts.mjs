@@ -11,6 +11,7 @@ export const STRATEGIES = new Set([
 export const VECTOR_KINDS = new Set(["native-vector", "embedded-raster"]);
 export const ELEMENT_TYPES = new Set(["shape", "text", "connector", "image", "group"]);
 export const EDITABLE_LEVELS = new Set(["full", "geometry-and-style", "position-and-scale", "none"]);
+export const ASSET_ROLES = new Set(["icon", "ui-component", "illustration", "decoration", "native-component"]);
 
 function isObject(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -151,6 +152,9 @@ export function validateSceneGraph(scene) {
     if (!ELEMENT_TYPES.has(element.type)) errors.push(`Element ${element.id} has unsupported type: ${element.type}`);
     if (element.type !== "connector" && element.type !== "group") validateBbox(element.bbox, `Element ${element.id} bbox`, errors);
     if (element.type === "text" && typeof element.text !== "string") errors.push(`Text element ${element.id} needs text.`);
+    if (element.type === "image" && !String(element.asset_id ?? "").trim()) {
+      errors.push(`Image element ${element.id} must reference an asset_id.`);
+    }
     if (element.type === "connector") {
       if (!element.from || !element.to) errors.push(`Connector ${element.id} needs from and to.`);
       if (element.from && !ids.has(element.from)) errors.push(`Connector ${element.id} has unknown from id: ${element.from}`);
@@ -167,14 +171,28 @@ export function validateAssetManifest(manifest, scene = null) {
   const warnings = [];
   if (!isObject(manifest)) return { valid: false, errors: ["Asset manifest must be a JSON object."], warnings };
   if (!Array.isArray(manifest.jobs)) errors.push("assets manifest jobs must be an array.");
+  if (!isObject(manifest.inventory)) {
+    errors.push("assets manifest must include an inventory completion record.");
+  } else {
+    if (manifest.inventory.granularity !== "fine-grained") errors.push("Asset inventory granularity must be fine-grained.");
+    if (manifest.inventory.semantic_pass_complete !== true) errors.push("Asset inventory semantic pass is incomplete.");
+    if (manifest.inventory.residual_pass_complete !== true) errors.push("Asset inventory residual pass is incomplete.");
+    if (!Array.isArray(manifest.inventory.unexplained_visuals)) errors.push("Asset inventory unexplained_visuals must be an array.");
+    else if (manifest.inventory.unexplained_visuals.length > 0) {
+      errors.push(`Asset inventory still has unexplained visuals: ${manifest.inventory.unexplained_visuals.join(", ")}`);
+    }
+  }
   for (const duplicate of duplicateIds(manifest.jobs ?? [])) errors.push(`Duplicate asset id: ${duplicate}`);
   const sceneIds = new Set((scene?.elements ?? []).map((item) => item.id));
+  const sceneElements = new Map((scene?.elements ?? []).map((item) => [item.id, item]));
+  const jobsById = new Map((manifest.jobs ?? []).map((job) => [job.id, job]));
   for (const job of manifest.jobs ?? []) {
     if (!job.id) errors.push("Every asset job needs an id.");
     if (!STRATEGIES.has(job.strategy)) errors.push(`Asset ${job.id} has unsupported strategy: ${job.strategy}`);
     if (!VECTOR_KINDS.has(job.vector_kind)) errors.push(`Asset ${job.id} must declare vector_kind native-vector or embedded-raster.`);
     if (!isObject(job.source) || !job.source.kind) errors.push(`Asset ${job.id} must declare a structured source with kind.`);
     if (!EDITABLE_LEVELS.has(job.editable_level)) errors.push(`Asset ${job.id} must declare editable_level.`);
+    if (!ASSET_ROLES.has(job.asset_role)) errors.push(`Asset ${job.id} must declare a supported asset_role.`);
     validateBbox(job.bbox, `Asset ${job.id} bbox`, errors);
     if (!Array.isArray(job.source_element_ids) || job.source_element_ids.length === 0) {
       errors.push(`Asset ${job.id} must list source_element_ids.`);
@@ -190,6 +208,41 @@ export function validateAssetManifest(manifest, scene = null) {
     }
     if (job.strategy === "regenerate-grounded" && !String(job.prompt ?? "").trim()) {
       errors.push(`Regenerated asset ${job.id} must persist its prompt.`);
+    }
+    if (job.strategy === "regenerate-grounded" && job.source?.kind !== "imagegen") {
+      errors.push(`Regenerated asset ${job.id} must declare imagegen as its source.`);
+    }
+    if (job.strategy === "regenerate-grounded" && job.background_requirement !== "transparent") {
+      errors.push(`Regenerated asset ${job.id} must require a transparent background.`);
+    }
+    if (job.strategy === "regenerate-grounded" && job.status === "completed") {
+      if (!Number.isFinite(Number(job.alpha?.transparent_fraction)) || Number(job.alpha.transparent_fraction) < 0.005) {
+        errors.push(`Completed regenerated asset ${job.id} has not passed the transparent-background gate.`);
+      }
+      if (!Number.isFinite(Number(job.alpha?.visible_fraction)) || Number(job.alpha.visible_fraction) < 0.005) {
+        errors.push(`Completed regenerated asset ${job.id} has not passed the visible-foreground gate.`);
+      }
+    }
+    if (job.strategy === "direct-extract" && job.source?.approved_by_user !== true) {
+      errors.push(`Direct extraction for ${job.id} requires explicit user approval; regenerate fine-grained visuals by default.`);
+    }
+    const imageSources = (job.source_element_ids ?? []).filter((id) => sceneElements.get(id)?.type === "image");
+    if (imageSources.length > 0 && !["direct-extract", "regenerate-grounded"].includes(job.strategy)) {
+      errors.push(`Image asset ${job.id} must use grounded regeneration or explicitly approved direct extraction.`);
+    }
+  }
+  for (const element of scene?.elements ?? []) {
+    if (element.type !== "image") continue;
+    const job = jobsById.get(element.asset_id);
+    if (!job) {
+      errors.push(`Image element ${element.id} references missing asset job: ${element.asset_id}`);
+      continue;
+    }
+    if (!(job.source_element_ids ?? []).includes(element.id)) {
+      errors.push(`Asset ${job.id} must list image instance ${element.id} in source_element_ids.`);
+    }
+    if (element.strategy && element.strategy !== job.strategy) {
+      errors.push(`Image element ${element.id} strategy ${element.strategy} does not match asset ${job.id} strategy ${job.strategy}.`);
     }
   }
   for (const duplicate of duplicateAssetGroups(manifest)) {

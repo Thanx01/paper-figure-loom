@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://paper-figure-studio.dev/schemas/scene-graph.schema.json",
-  "title": "Paper Figure Studio scene graph",
+  "$id": "https://paper-figure-loom.dev/schemas/scene-graph.schema.json",
+  "title": "Paper Figure Loom scene graph",
   "type": "object",
   "required": ["schema_version", "canvas", "elements"],
   "properties": {
@@ -42,6 +42,12 @@
           "strategy": { "enum": ["native-text", "native-shape", "direct-extract", "regenerate-grounded"] },
           "style": { "type": "object" }
         },
+        "allOf": [
+          {
+            "if": { "properties": { "type": { "const": "image" } }, "required": ["type"] },
+            "then": { "required": ["asset_id", "bbox"] }
+          }
+        ],
         "additionalProperties": true
       }
     }

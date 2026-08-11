@@ -1,20 +1,33 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://paper-figure-studio.dev/schemas/assets-manifest.schema.json",
-  "title": "Paper Figure Studio asset manifest",
+  "$id": "https://paper-figure-loom.dev/schemas/assets-manifest.schema.json",
+  "title": "Paper Figure Loom asset manifest",
   "type": "object",
-  "required": ["schema_version", "jobs"],
+  "required": ["schema_version", "inventory", "jobs"],
   "properties": {
     "schema_version": { "const": "1.0" },
+    "inventory": {
+      "type": "object",
+      "required": ["granularity", "semantic_pass_complete", "residual_pass_complete", "unexplained_visuals"],
+      "properties": {
+        "granularity": { "const": "fine-grained" },
+        "semantic_pass_complete": { "const": true },
+        "residual_pass_complete": { "const": true },
+        "unexplained_visuals": { "type": "array", "maxItems": 0 }
+      },
+      "additionalProperties": true
+    },
     "jobs": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "strategy", "vector_kind", "bbox", "source_element_ids", "source", "editable_level"],
+        "required": ["id", "strategy", "vector_kind", "asset_role", "bbox", "source_element_ids", "source", "editable_level"],
         "properties": {
           "id": { "type": "string", "minLength": 1 },
           "strategy": { "enum": ["native-text", "native-shape", "direct-extract", "regenerate-grounded"] },
           "vector_kind": { "enum": ["native-vector", "embedded-raster"] },
+          "asset_role": { "enum": ["icon", "ui-component", "illustration", "decoration", "native-component"] },
+          "background_requirement": { "enum": ["transparent", "preserve-source"] },
           "bbox": {
             "type": "array",
             "items": { "type": "number" },
@@ -36,7 +49,17 @@
           "status": { "enum": ["pending", "completed", "blocked"] },
           "prompt": { "type": ["string", "null"] },
           "output_svg": { "type": "string" },
-          "output_png": { "type": "string" }
+          "output_png": { "type": "string" },
+          "alpha": {
+            "type": "object",
+            "properties": {
+              "width": { "type": "integer", "minimum": 1 },
+              "height": { "type": "integer", "minimum": 1 },
+              "transparent_fraction": { "type": "number", "minimum": 0, "maximum": 1 },
+              "visible_fraction": { "type": "number", "minimum": 0, "maximum": 1 }
+            },
+            "additionalProperties": false
+          }
         },
         "additionalProperties": true
       }

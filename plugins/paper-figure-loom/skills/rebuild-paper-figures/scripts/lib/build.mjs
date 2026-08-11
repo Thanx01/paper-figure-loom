@@ -51,56 +51,54 @@ async function buildPptx(runDir, scene, manifest) {
   const facades = new Map();
   const ordered = [...scene.elements].sort((a, b) => Number(a.z_index ?? 0) - Number(b.z_index ?? 0));
 
-  for (const element of ordered.filter((item) => item.type === "shape")) {
-    const style = element.style ?? {};
-    const shape = slide.shapes.add({
-      geometry: shapeGeometry(element.geometry),
-      name: element.id,
-      position: { ...bboxPixels(element.bbox, scene.canvas), rotation: Number(element.rotation ?? 0) },
-      fill: style.fill ?? "none",
-      line: lineStyle(style),
-      ...(element.geometry === "roundRect" ? { borderRadius: Number(style.radius ?? 12) } : {}),
-      ...(style.shadow ? { shadow: style.shadow } : {}),
-    });
-    facades.set(element.id, shape);
-  }
-
-  for (const element of ordered.filter((item) => item.type === "image")) {
-    const asset = assetById.get(element.asset_id);
-    if (!asset) throw new Error(`Unknown asset for PPTX image ${element.id}: ${element.asset_id}`);
-    const imagePath = path.join(runDir, asset.output_png ?? `assets/png/${asset.id}.png`);
-    const bytes = await fs.readFile(imagePath);
-    const image = slide.images.add({
-      blob: new Uint8Array(bytes),
-      contentType: "image/png",
-      alt: element.alt ?? element.id,
-      fit: "contain",
-      position: bboxPixels(element.bbox, scene.canvas),
-      prompt: asset.prompt ?? undefined,
-    });
-    image.rotation = Number(element.rotation ?? 0);
-    image.lockAspectRatio = true;
-    facades.set(element.id, image);
-  }
-
-  for (const element of ordered.filter((item) => item.type === "text")) {
-    const style = element.style ?? {};
-    const textBox = slide.shapes.add({
-      geometry: "textbox",
-      name: element.id,
-      position: { ...bboxPixels(element.bbox, scene.canvas), rotation: Number(element.rotation ?? 0) },
-      fill: "none",
-      line: { style: "solid", fill: "none", width: 0 },
-    });
-    textBox.text = element.text;
-    textBox.text.style = {
-      fontSize: Number(style.font_size ?? 18),
-      bold: Boolean(style.bold || String(style.font_weight ?? "") === "700"),
-      color: style.fill ?? "#202733",
-      alignment: style.align ?? "center",
-      fontFamily: style.font_family ?? "Arial",
-    };
-    facades.set(element.id, textBox);
+  for (const element of ordered.filter((item) => ["shape", "image", "text"].includes(item.type))) {
+    if (element.type === "shape") {
+      const style = element.style ?? {};
+      const shape = slide.shapes.add({
+        geometry: shapeGeometry(element.geometry),
+        name: element.id,
+        position: { ...bboxPixels(element.bbox, scene.canvas), rotation: Number(element.rotation ?? 0) },
+        fill: style.fill ?? "none",
+        line: lineStyle(style),
+        ...(element.geometry === "roundRect" ? { borderRadius: Number(style.radius ?? 12) } : {}),
+        ...(style.shadow ? { shadow: style.shadow } : {}),
+      });
+      facades.set(element.id, shape);
+    } else if (element.type === "image") {
+      const asset = assetById.get(element.asset_id);
+      if (!asset) throw new Error(`Unknown asset for PPTX image ${element.id}: ${element.asset_id}`);
+      const imagePath = path.join(runDir, asset.output_png ?? `assets/png/${asset.id}.png`);
+      const bytes = await fs.readFile(imagePath);
+      const image = slide.images.add({
+        blob: new Uint8Array(bytes),
+        contentType: "image/png",
+        alt: element.alt ?? element.id,
+        fit: "contain",
+        position: bboxPixels(element.bbox, scene.canvas),
+        prompt: asset.prompt ?? undefined,
+      });
+      image.rotation = Number(element.rotation ?? 0);
+      image.lockAspectRatio = true;
+      facades.set(element.id, image);
+    } else {
+      const style = element.style ?? {};
+      const textBox = slide.shapes.add({
+        geometry: "textbox",
+        name: element.id,
+        position: { ...bboxPixels(element.bbox, scene.canvas), rotation: Number(element.rotation ?? 0) },
+        fill: "none",
+        line: { style: "solid", fill: "none", width: 0 },
+      });
+      textBox.text = element.text;
+      textBox.text.style = {
+        fontSize: Number(style.font_size ?? 18),
+        bold: Boolean(style.bold || String(style.font_weight ?? "") === "700"),
+        color: style.fill ?? "#202733",
+        alignment: style.align ?? "center",
+        fontFamily: style.font_family ?? "Arial",
+      };
+      facades.set(element.id, textBox);
+    }
   }
 
   for (const element of ordered.filter((item) => item.type === "connector")) {

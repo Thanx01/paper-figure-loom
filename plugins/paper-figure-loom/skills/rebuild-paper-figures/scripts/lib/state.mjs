@@ -121,7 +121,7 @@ async function pendingAssetAction(runDir, state) {
     return {
       action: "agent.write_asset_manifest",
       output: "assets-manifest.json",
-      instruction: "Create a complete semantic asset inventory from the scene graph, then record the assets stage.",
+      instruction: "Inventory every visually distinct extractable UI, icon, illustration, and decoration at fine granularity. Give every image instance an asset_id. Regenerate each distinct visual as its own transparent image; repeated identical instances may share one asset job. Then record both discovery passes as complete.",
     };
   }
   const manifest = await readJson(manifestPath);
@@ -150,7 +150,9 @@ async function pendingAssetAction(runDir, state) {
       references: ["canonical-master.png", pending.reference_crop].filter(Boolean),
       constraints: [
         "Use one image generation call for this distinct asset.",
-        "Use a perfectly flat chroma-key background and preserve the subject aspect ratio.",
+        "Generate only the marked UI/icon/illustration, with no surrounding panel, labels, or unrelated objects.",
+        "Use a perfectly flat chroma-key background, preserve the subject silhouette, aspect ratio, palette, and internal proportions.",
+        "The recorded output must contain real transparent background pixels and visible foreground pixels.",
         "Copy the validated result into the run before recording it.",
       ],
     };
@@ -165,7 +167,7 @@ async function pendingAssetAction(runDir, state) {
 export async function nextAction(runDir, state) {
   if (state.status === "blocked") {
     if (state.stages.package.status === "completed") {
-      return { action: "deliver_blocker", artifact: "paper-figure-studio-blocker.zip", blocker: state.blocker };
+      return { action: "deliver_blocker", artifact: "paper-figure-loom-blocker.zip", blocker: state.blocker };
     }
     return {
       action: "script.package_blocker",
@@ -174,7 +176,7 @@ export async function nextAction(runDir, state) {
     };
   }
   if (state.status === "completed") {
-    return { action: "deliver", artifact: "paper-figure-studio-delivery.zip" };
+    return { action: "deliver", artifact: "paper-figure-loom-delivery.zip" };
   }
 
   if (state.stages.design.status !== "completed") {
@@ -197,7 +199,7 @@ export async function nextAction(runDir, state) {
       action: "agent.write_scene_graph",
       output: "scene-graph.json",
       passes: ["semantic_structure", "unexplained_visual_residual"],
-      instruction: "Describe every module, native text item, connector, reusable UI group, and complex visual using normalized coordinates.",
+      instruction: "Describe every module, native text item, connector, and every visually distinct extractable UI/icon/illustration using normalized coordinates. Create separate image elements for repeated instances, but let identical instances share an asset_id. Complete both the semantic and unexplained-residual passes.",
     };
   }
   if (state.stages.assets.status !== "completed") return pendingAssetAction(runDir, state);
@@ -222,5 +224,5 @@ export async function nextAction(runDir, state) {
   if (state.stages.package.status !== "completed") {
     return { action: "script.package", command: "package --run-dir <RUN_DIR>" };
   }
-  return { action: "deliver", artifact: "paper-figure-studio-delivery.zip" };
+  return { action: "deliver", artifact: "paper-figure-loom-delivery.zip" };
 }

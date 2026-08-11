@@ -78,4 +78,8 @@ Populate `expected_geometry` for every non-connector element whose position can 
 
 Supported visual element types are `shape`, `text`, `connector`, `image`, and `group`. Supported shape geometries are `rect`, `roundRect`, `ellipse`, `diamond`, and `rightArrow`.
 
-Use `allow_overlap: true` only for intentional overlap. Mark top-level modules with `qa_role: module`. Image elements must reference an `asset_id`; do not use filesystem paths in the scene graph.
+Use `allow_overlap: true` only for intentional overlap. Mark top-level modules with `qa_role: module`. Every image element must reference an `asset_id`; do not use filesystem paths in the scene graph.
+
+Create one image element for each visible instance of a fine-grained UI, icon, illustration, badge, or decoration. If an identical icon appears three times, create three image elements with separate bboxes and the same `asset_id`. The matching manifest job must list all three element ids. This preserves every position while avoiding duplicate generation.
+
+Record the canonical master's actual z-order. The PPTX builder creates connectors behind nodes and creates every other object in ascending `z_index`; do not rely on type-based ordering.

@@ -63,6 +63,24 @@ async function removeKeyBackground(source, destination, keyColor, tolerance = 24
   await sharp(data, { raw: info }).png().toFile(destination);
 }
 
+async function inspectTransparency(source) {
+  const sharp = await loadSharp();
+  const { data, info } = await sharp(source).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const pixels = Math.max(1, info.width * info.height);
+  let transparent = 0;
+  let visible = 0;
+  for (let index = 3; index < data.length; index += 4) {
+    if (data[index] <= 8) transparent += 1;
+    if (data[index] >= 32) visible += 1;
+  }
+  return {
+    width: info.width,
+    height: info.height,
+    transparent_fraction: transparent / pixels,
+    visible_fraction: visible / pixels,
+  };
+}
+
 async function cropMaster(runDir, bbox, output) {
   const sharp = await loadSharp();
   const master = path.join(runDir, "canonical-master.png");
@@ -256,16 +274,29 @@ async function recordAsset(runDir, args) {
   const output = path.join(runDir, "assets/png", `${assetId}.png`);
   const sharp = await loadSharp();
   if (args.fromMaster) {
+    if (job.strategy !== "direct-extract") {
+      throw new Error(`Asset ${assetId} uses ${job.strategy}; --from-master is allowed only for explicitly approved direct-extract jobs.`);
+    }
     await cropMaster(runDir, job.bbox, output);
   } else {
     const artifact = path.resolve(requiredArg(args, "artifact"));
     if (args.keyColor) await removeKeyBackground(artifact, output, args.keyColor, args.keyTolerance ?? 24);
     else await sharp(artifact).png().toFile(output);
   }
+  const alpha = await inspectTransparency(output);
+  if (job.background_requirement === "transparent") {
+    if (alpha.transparent_fraction < 0.005) {
+      throw new Error(`Asset ${assetId} has no meaningful transparent background. Regenerate it on a flat key color or record it with --key-color.`);
+    }
+    if (alpha.visible_fraction < 0.005) {
+      throw new Error(`Asset ${assetId} contains no meaningful visible foreground after background removal.`);
+    }
+  }
   job.status = "completed";
   job.output_png = `assets/png/${assetId}.png`;
   job.attempts = Number(job.attempts ?? 0) + 1;
-  job.sha256 = await sha256File(output);
+  job.alpha = alpha;
+  job.sha256_png = await sha256File(output);
   const result = validateAssetManifest(manifest, scene);
   if (!result.valid) throw new Error(result.errors.join("\n"));
   await atomicWriteJson(manifestPath, manifest);

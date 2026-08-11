@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
-import { loadSharp } from "../plugins/paper-figure-studio/skills/craft-paper-figures/scripts/lib/runtime.mjs";
-import { loadJszip } from "../plugins/paper-figure-studio/skills/craft-paper-figures/scripts/lib/runtime.mjs";
+import { loadSharp } from "../plugins/paper-figure-loom/skills/rebuild-paper-figures/scripts/lib/runtime.mjs";
+import { loadJszip } from "../plugins/paper-figure-loom/skills/rebuild-paper-figures/scripts/lib/runtime.mjs";
 import { fixturePath, json, prepareRecordedRun, runForge } from "./helpers.mjs";
 
 test("asset manifest recording creates grounded reference crops and chroma-key recording creates alpha", async () => {
@@ -26,6 +26,7 @@ test("asset manifest recording creates grounded reference crops and chroma-key r
 
 test("failed grounded generations persist reasons and stop at the attempt budget", async () => {
   const { runDir, root } = await prepareRecordedRun("hybrid", { resolveAssets: false });
+  const sharp = await loadSharp();
   const manifestPath = path.join(root, "regenerate-assets.json");
   const manifest = await json(fixturePath("hybrid", "assets-manifest.json"));
   const job = manifest.jobs.find((item) => item.id === "grounded-visual-asset");
@@ -51,6 +52,28 @@ test("failed grounded generations persist reasons and stop at the attempt budget
   const archive = await JSZip.loadAsync(await fs.readFile(packaged.output));
   assert.ok(archive.file("blocker-report.json"));
   assert.equal((await runForge(["next", "--run-dir", runDir])).action, "deliver_blocker");
-  await runForge(["record", "--run-dir", runDir, "--asset-id", job.id, "--from-master"]);
+  const recovery = path.join(root, "recovery.png");
+  await sharp({ create: { width: 40, height: 40, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+    .composite([{ input: Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><circle cx="10" cy="10" r="9" fill="#F97316"/></svg>'), left: 10, top: 10 }])
+    .png()
+    .toFile(recovery);
+  await runForge(["record", "--run-dir", runDir, "--asset-id", job.id, "--artifact", recovery]);
   assert.equal((await runForge(["next", "--run-dir", runDir])).action, "script.build");
+});
+
+test("grounded assets without transparent background are rejected", async () => {
+  const { runDir, root } = await prepareRecordedRun("hybrid", { resolveAssets: false });
+  const sharp = await loadSharp();
+  const opaque = path.join(root, "opaque.png");
+  await sharp({ create: { width: 48, height: 48, channels: 3, background: "#F97316" } }).png().toFile(opaque);
+  await assert.rejects(
+    runForge(["record", "--run-dir", runDir, "--asset-id", "grounded-visual-asset", "--artifact", opaque]),
+    /no meaningful transparent background/,
+  );
+  await assert.rejects(
+    runForge(["record", "--run-dir", runDir, "--asset-id", "grounded-visual-asset", "--from-master"]),
+    /allowed only for explicitly approved direct-extract jobs/,
+  );
+  const manifest = await json(path.join(runDir, "assets-manifest.json"));
+  assert.equal(manifest.jobs.find((item) => item.id === "grounded-visual-asset").status, "pending");
 });

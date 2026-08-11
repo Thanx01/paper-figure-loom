@@ -6,6 +6,9 @@ Treat QA as a release gate, not an advisory score.
 
 - Required modules, required connectors, and verbatim text: 100% present.
 - Every asset job: completed with both PNG and SVG outputs.
+- Every image instance resolves to one manifest job, and every instance appears in that job's `source_element_ids`.
+- Both inventory passes are complete and `unexplained_visuals` is empty.
+- Every completed regenerated asset has meaningful transparent background pixels and meaningful visible foreground pixels.
 - Out-of-bounds elements, unapproved top-level module overlap, duplicate ids, missing references, and unsafe SVG links: zero.
 - PPTX: native text runs and shape objects must exist when the design requires them.
 - Any near-full-slide picture is an automatic failure, even when other native objects are also present.

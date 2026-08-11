@@ -1,125 +1,145 @@
-# Paper Figure Studio
+# Paper Figure Loom
 
 [English](README.md) | **简体中文**
 
-**把论文框架图，变成真正能改的 PowerPoint。**
+**先把框架图拆成零件，再按原位织回一张真正可编辑的 PPT。**
 
-给 Paper Figure Studio 一张参考图，或者一篇论文加一个想法。它会交付一页可编辑的 PowerPoint、拆分好的视觉素材，以及用来核对还原效果的对比图。
+Paper Figure Loom 把一套原本需要在 GPT、下载目录和本地 Codex 之间来回接力的流程，收进一次 Codex 任务：先得到一张完整母图，再把母图里能独立成图的 UI、图标和插画逐一重新生成成透明素材，最后按照母图的比例、位置、层级和配色把它们拼回 PowerPoint。
 
-## 为什么要做 Paper Figure Studio
+你只需要提供论文或母图，最后验收结果。中间不用反复发送“继续生成”，不用手工下载素材包，也不用再把压缩包转交给另一个任务。
 
-很多论文框架图做到最后，只剩下一张扁平的 PNG。此时哪怕只改一个词、挪一根箭头、复用一个图标，也可能要把整张图重新做一遍。
+## 这套 Skill 严格做什么
 
-过去常见的解决办法同样麻烦：反复让图像模型抠图，分批下载，转成 SVG，再到本地解压、拼回 PPT；漏了一个小图标，就要继续重复前面的步骤。
+整条工作流固定分成三步，顺序不会省略。
 
-Paper Figure Studio 把这些动作收进一次 Codex 任务。你只需要提供一次材料，最后验收结果。
+### 1. 先确定一张完整母图
 
-## 一句话开始
+如果你已经用 GPT 根据论文原文 DIY 好了框架图，直接把这张图交给 Skill。它会把这张图作为唯一的视觉母版，不重新设计版式。
 
-### 已经有框架图
+如果你只有论文、想法或风格参考，Skill 会先读清楚必须出现的文字、模块和连接关系，再调用 Codex 内置图像生成制作三张完整候选图。缺模块的候选会被淘汰，最终只选一张作为母图。
 
-附上图片，然后发送：
+母图决定构图、配色和视觉风格；你明确写下的文字和论文原意决定最终内容。母图里偶尔生成错的字，不会覆盖正确原文。
+
+### 2. 把母图里的 UI 和图标逐个重生成透明单图
+
+这一步对应你原来的指令：
+
+> 尽可能细粒度且完整地找出图片里所有能独立抠下来的 UI、图标和插画，针对每一个重新生成单张图片，不要底色和背景。
+
+Skill 会检查两遍母图。第一遍找主要模块、文字、连线和明显的视觉组件；第二遍专门找第一遍没解释掉的小图标、装饰、徽标、被遮挡元素和角落细节。
+
+执行时遵守几个明确规则：
+
+- 每个视觉上可以独立存在的 UI、图标、插画或装饰，单独建立一个素材任务；
+- 每个素材都同时参考完整母图和它在母图中的局部裁剪，只重新生成目标本身；
+- 素材先生成在纯色背景上，再去除背景；没有真实透明区域或没有可见主体的结果不能通过；
+- 同一个图标出现三次时，会保留三个位置，但相同图标只生成一次并复用，避免制造重复文件；
+- 普通文字、简单方框和箭头不做成位图，而是保留为 PowerPoint 原生对象；简单图标也可以用真实矢量形状重画；
+- 不会为了少生成几张图，就把本来能分开的多个图标粗暴合并成一大块。
+
+默认策略是“参考母图重新生成透明素材”，不是直接裁一块带背景的截图。只有你明确要求保留原始裁剪时，才允许改用直接提取。
+
+### 3. 按母图原位拼回 PowerPoint
+
+有了细粒度素材库之后，Skill 会把原框架图当作装配图：按标准化坐标放回每一个元素，保持画布比例、元素宽高比、相对位置、配色、遮挡层级和连线关系。
+
+文字、面板和连接线会成为真正可选中、可修改的 PowerPoint 对象；复杂 UI 和插画会以透明 PNG 放入，并锁定纵横比。整张母图不会被铺在幻灯片上充当“高还原度捷径”。
+
+完成后，Skill 会把 PPT 渲染成图片，与母图生成并排图、叠加图、差异图、元素框图和素材总览。只修未通过的局部；如果在修复预算内仍无法达到门槛，就返回问题报告和可继续运行的状态，而不是把半成品冒充成功。
+
+## 怎么使用
+
+### 用法 A：你已经有 GPT 生成的母图
+
+把母图附在 Codex 任务里，然后发送：
 
 ```text
-使用 $craft-paper-figures，把附件中的框架图复刻成可编辑 PowerPoint。
-保留原图的文字、布局和配色；文字、方框和连线必须能单独修改；
-把可复用的图标分别导出；完成后对照原图检查，只交付最终文件。
+使用 $rebuild-paper-figures 处理附件中的原框架图。
+
+先尽可能细粒度且完整地识别图中所有能独立成图的 UI、图标、插画和装饰；
+针对每一种不同的视觉元素，参考原图重新生成一张无底色、无背景的透明单图。
+然后以原框架图为唯一布局母版，用这些细粒度素材 1:1 拼回一页可编辑 PowerPoint，
+保持画布比例、元素比例、相对位置、层级、连线和配色一致。
+文字、方框和连线必须是原生可编辑对象。完成自动对比和局部修复后，只交付最终文件。
 ```
 
-### 只有论文或想法
+这条路线在运行记录中叫 `rebuild`，也是目前最稳定、最贴合原始工作流的用法。
 
-附上论文和可选的风格参考图，然后发送：
+### 用法 B：从论文原文开始
+
+附上论文，可选附上风格参考，然后发送：
 
 ```text
-使用 $craft-paper-figures，阅读附件论文并制作一张清楚的单页方法框架图。
-参考附件图片的风格，所有文字都要能编辑；完成后自动检查，
-并交付 PowerPoint 和拆分好的视觉素材。
+使用 $rebuild-paper-figures，根据附件论文制作一张单页方法框架图。
+
+先锁定论文中的准确文字、模块和连接关系，再生成三张完整母图并选出结构完整的一张。
+接着逐一重新生成母图中所有可独立成图的 UI、图标、插画和装饰为透明单图，
+最后按选定母图的比例、位置、层级和配色拼成可编辑 PowerPoint。
+自动完成视觉对比和局部修复，中间不需要我确认，只在最后让我验收。
 ```
 
-正常使用到这里就够了。你不需要手工运行脚本，也不需要一遍遍发送“继续”。
+这条路线叫 `author`。它把“先用 GPT 根据 paper DIY 母图”也纳入同一次任务；选定母图以后，后两步与 `rebuild` 完全相同。
 
-## 你可以从哪里开始
+### 中断后继续
 
-| 你手里有什么 | Paper Figure Studio 会做什么 | 适合什么场景 |
-| --- | --- | --- |
-| 一张已经完成的 PNG/JPG 框架图 | 复刻文字、构图、配色、箭头和可复用组件 | 修改已发表图片，或找回丢失的可编辑源文件 |
-| 论文、提示词或一个粗略想法 | 先设计几套完整方案，选出可用的一套，再制作可编辑版本 | 新论文的方法图、模型图或系统总览图 |
+每个阶段都会原子保存。如果任务中断，继续使用同一个运行目录：
 
-在运行文件中，第一种方式叫 `rebuild`，第二种叫 `author`。只有在查看运行状态或写脚本时才需要记住这两个名字。
+```text
+使用 $rebuild-paper-figures，继续 /absolute/path/to/run-directory 中的任务。
+读取 run-state.json，保留已经通过的阶段和素材，从下一项继续。
+```
 
 ## 安装
 
-把这个 GitHub 仓库添加为 Codex 插件市场：
+把仓库添加为 Codex 插件市场：
 
 ```bash
-codex plugin marketplace add Thanx01/paper-figure-studio --ref main
+codex plugin marketplace add Thanx01/paper-figure-loom --ref main
 ```
 
-重启 Codex Desktop，打开 **Plugins（插件）**，选择 **personal（个人）** 市场，然后安装 **Paper Figure Studio**。
+重启 Codex Desktop，打开 **Plugins（插件）**，在 **personal（个人）** 市场中安装 **Paper Figure Loom**。
 
-如果要从本地仓库安装：
+也可以从本地克隆安装：
 
 ```bash
-git clone https://github.com/Thanx01/paper-figure-studio.git
-codex plugin marketplace add /absolute/path/to/paper-figure-studio
+git clone https://github.com/Thanx01/paper-figure-loom.git
+codex plugin marketplace add /absolute/path/to/paper-figure-loom
 ```
 
-Paper Figure Studio 目前运行在 Codex Desktop 本地模式中，直接使用 Codex 内置的图像生成能力，不需要配置 `OPENAI_API_KEY`。
+首版面向 Codex Desktop 本地模式，直接调用 Codex 内置图像生成，不需要 `OPENAI_API_KEY`，也不会自动操作网页版 ChatGPT。
 
 ## 最后会拿到什么
 
-- `framework.pptx`：最重要的可编辑成品；
-- `framework.svg` 和 `framework.png`：方便放进其他软件的完整框架图；
-- `assets/svg/` 和 `assets/png/`：单独拆出的图标、插画和组件；
-- `assets-manifest.json`：说明每个素材从哪里来、能编辑到什么程度；
-- `qa/` 和 `qa-report.json`：并排图、叠加图和差异图，用来检查还原效果；
-- `paper-figure-studio-delivery.zip`：包含以上全部内容的交付压缩包。
+- `framework.pptx`：权威可编辑成品；
+- `framework.svg` 与 `framework.png`：完整框架图；
+- `assets/png/`：每个细粒度视觉元素的透明 PNG；
+- `assets/svg/`：每个素材对应的 SVG；复杂素材的 SVG 会如实嵌入 PNG，不伪装成纯矢量；
+- `assets-manifest.json`：每个素材的来源、策略、对应实例、透明度检查和可编辑级别；
+- `qa/` 与 `qa-report.json`：母图对比、差异图、元素框和素材总览；
+- `paper-figure-loom-delivery.zip`：完整交付包。
 
-如果结果没有通过检查，Paper Figure Studio 会返回一个问题包，里面写清楚未通过的项目并保存当前进度，而不会把半成品冒充成成功结果。
+## “1:1”在这里是什么意思
 
-## 哪些内容真的可以编辑
+“1:1”首先指结构、逐字文字、画布比例、元素位置、大小、层级、配色和直接重建的几何关系处于项目规定的误差内；也指拼装过程不会拉伸素材，不会漏掉图标，不会用整页截图伪造结果。
 
-文字、方框、面板和箭头都会重建成真正的 PowerPoint 对象。交付之后，你可以单独选中、改字、换颜色或移动位置。
+重新生成的复杂插画不是从原图复制像素，因此只能承诺同一区域内的角色、轮廓、比例、配色和视觉重量接近，不能承诺逐像素相同。QA 会把这类区域和原生重建区域分开判断。
 
-复杂插画则会诚实处理。人物、带纹理的卡牌或细节很多的插画，可能仍然是带透明背景的 PNG，只是被放进 PPT 和 SVG 中。素材清单会明确写出来。Paper Figure Studio 不会把 PNG 宣称成“纯矢量”，也不会拿整张原图盖在幻灯片上伪装还原度。
+## 当前边界
 
-## 发送指令之后，会自动发生什么
-
-1. 先确定不能写错的文字、必须出现的模块和连接关系。
-2. 看两遍原图：第一遍理清主要结构，第二遍专门寻找容易漏掉的小图标、装饰和遮挡细节。
-3. 简单元素直接重画；复杂插画则参考原图提取或重新生成。
-4. 生成 PPT，渲染成图片与原图对照，只修不合格的部分。
-5. 打包可编辑成品、独立素材和对比证据。
-
-每完成一个阶段都会保存进度。如果 Codex 中断了，把同一个运行目录交给它即可继续：
-
-```text
-使用 $craft-paper-figures，继续 /absolute/path/to/run-directory 中未完成的任务。
-保留已经完成的内容，从 run-state.json 记录的位置继续。
-```
-
-## 这里说的“1:1”是什么
-
-对文字、结构、布局和直接提取的素材，“1:1”是指处于仓库规定的误差范围内。对必须重新生成的复杂插画，它表示在同一位置保持接近的内容、配色和视觉重量，而不是每个像素完全相同。
-
-这个区别很重要：一张真正能修改的高还原框架图，比一张假装可编辑的完美截图更有价值。
-
-## 目前的边界
-
-- 一次任务只处理一张图，输出一页 PowerPoint。
-- PowerPoint 是权威可编辑成品；暂不生成 VSDX。
-- 重新生成的复杂插画可以保持用途、位置、配色和视觉重量，但不能保证逐像素一致。
-- 实时图像生成只在 Codex Desktop 中运行，不会放进 GitHub Actions。
-- 当前发布重点是复刻已有图片；从论文直接创作的 `author` 路线已经接入，但仍是下一阶段重点打磨的部分。
+- 一次运行处理一张单页框架图；
+- PowerPoint 是可编辑成品的事实源，暂不输出 VSDX；
+- 默认最多生成 32 种不同的复杂素材，每种最多尝试两次；超过预算不会静默漏图，而会要求提高预算或返回问题包；
+- 实时图像生成只在 Codex Desktop 中执行；GitHub Actions 只跑静态测试、单元测试和录制回放；
+- `rebuild` 是当前发布重点；`author` 已接入完整状态机，但仍会继续加强论文解析和母图筛选。
 
 ## 给贡献者
 
 <details>
-<summary>运行文件、命令行和测试方式</summary>
+<summary>状态机、命令行和测试</summary>
 
-用户调用的 Skill 位于 `plugins/paper-figure-studio/skills/craft-paper-figures`，公开 JSON 契约位于 [`contracts/`](contracts/) 中。
+Skill 位于 `plugins/paper-figure-loom/skills/rebuild-paper-figures`，公开 JSON 契约位于 [`contracts/`](contracts/) 中。
 
-Codex 通常会自动驱动状态机。排查问题时，可以用绝对路径创建 `request.json`：
+Codex 正常使用时会自动驱动唯一入口 `forge.mjs`。调试时可以创建：
 
 ```json
 {
@@ -132,17 +152,17 @@ Codex 通常会自动驱动状态机。排查问题时，可以用绝对路径�
 然后使用 Codex Desktop 自带的 Node：
 
 ```bash
-<bundled-node> plugins/paper-figure-studio/skills/craft-paper-figures/scripts/forge.mjs init \
+<bundled-node> plugins/paper-figure-loom/skills/rebuild-paper-figures/scripts/forge.mjs init \
   --request /absolute/path/to/request.json \
   --run-dir /absolute/path/to/run
 
-<bundled-node> plugins/paper-figure-studio/skills/craft-paper-figures/scripts/forge.mjs next \
+<bundled-node> plugins/paper-figure-loom/skills/rebuild-paper-figures/scripts/forge.mjs next \
   --run-dir /absolute/path/to/run
 ```
 
-继续执行 `next` 返回的动作即可。完整命令包括 `init`、`next`、`record`、`validate`、`build`、`qa` 和 `package`。不要手工修改 `run-state.json`。
+继续执行 `next` 返回的动作即可。可用命令为 `init`、`next`、`record`、`validate`、`build`、`qa` 和 `package`。不要手改 `run-state.json`。
 
-确定性测试命令：
+确定性检查：
 
 ```bash
 pnpm install --frozen-lockfile
@@ -150,10 +170,10 @@ pnpm test
 pnpm run validate
 ```
 
-CI 使用原创合成样例和录制资产，不会调用实时图像生成。发布检查还会验证 Skill 与插件清单，并在 Codex Desktop 中构建真正可编辑的 PPTX。
+公开测试使用原创合成母图和录制资产，不调用实时图像生成。发布前还会运行官方 Skill/Plugin 校验，并在 Codex Desktop 中构建真实 PPTX。
 
 </details>
 
 ## 许可证
 
-代码采用 MIT License。用户提供的论文、参考图和运行产物仍然保留各自的来源与权利边界。
+代码采用 MIT License。用户提供的论文、母图、参考图和生成产物保留各自的来源与权利边界。

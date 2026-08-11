@@ -5,10 +5,10 @@ import { repoRoot } from "./helpers.mjs";
 
 const required = [
   ".agents/plugins/marketplace.json",
-  "plugins/paper-figure-studio/.codex-plugin/plugin.json",
-  "plugins/paper-figure-studio/skills/craft-paper-figures/SKILL.md",
-  "plugins/paper-figure-studio/skills/craft-paper-figures/agents/openai.yaml",
-  "plugins/paper-figure-studio/skills/craft-paper-figures/scripts/forge.mjs",
+  "plugins/paper-figure-loom/.codex-plugin/plugin.json",
+  "plugins/paper-figure-loom/skills/rebuild-paper-figures/SKILL.md",
+  "plugins/paper-figure-loom/skills/rebuild-paper-figures/agents/openai.yaml",
+  "plugins/paper-figure-loom/skills/rebuild-paper-figures/scripts/forge.mjs",
   "contracts/request.schema.json",
   "contracts/design-spec.schema.json",
   "contracts/scene-graph.schema.json",
@@ -25,7 +25,7 @@ for (const relative of required) {
 
 for (const relative of [
   ".agents/plugins/marketplace.json",
-  "plugins/paper-figure-studio/.codex-plugin/plugin.json",
+  "plugins/paper-figure-loom/.codex-plugin/plugin.json",
   "contracts/request.schema.json",
   "contracts/design-spec.schema.json",
   "contracts/scene-graph.schema.json",
@@ -35,22 +35,22 @@ for (const relative of [
   JSON.parse(await fs.readFile(path.join(repoRoot, relative), "utf8"));
 }
 
-const plugin = JSON.parse(await fs.readFile(path.join(repoRoot, "plugins/paper-figure-studio/.codex-plugin/plugin.json"), "utf8"));
-assert.equal(plugin.name, "paper-figure-studio");
+const plugin = JSON.parse(await fs.readFile(path.join(repoRoot, "plugins/paper-figure-loom/.codex-plugin/plugin.json"), "utf8"));
+assert.equal(plugin.name, "paper-figure-loom");
 assert.equal(plugin.skills, "./skills/");
-assert.equal(plugin.interface.displayName, "Paper Figure Studio");
-assert.equal(plugin.repository, "https://github.com/Thanx01/paper-figure-studio");
+assert.equal(plugin.interface.displayName, "Paper Figure Loom");
+assert.equal(plugin.repository, "https://github.com/Thanx01/paper-figure-loom");
 
-const skillContents = await fs.readFile(path.join(repoRoot, "plugins/paper-figure-studio/skills/craft-paper-figures/SKILL.md"), "utf8");
-assert.match(skillContents, /^---\nname: craft-paper-figures\n/);
-const skillUi = await fs.readFile(path.join(repoRoot, "plugins/paper-figure-studio/skills/craft-paper-figures/agents/openai.yaml"), "utf8");
-assert.match(skillUi, /\$craft-paper-figures/);
-await assert.rejects(fs.access(path.join(repoRoot, "plugins/paper-figure-studio/skills/build-paper-framework-diagrams")));
-await assert.rejects(fs.access(path.join(repoRoot, "plugins/paper-figure-studio/skills/forge-paper-figures")));
+const skillContents = await fs.readFile(path.join(repoRoot, "plugins/paper-figure-loom/skills/rebuild-paper-figures/SKILL.md"), "utf8");
+assert.match(skillContents, /^---\nname: rebuild-paper-figures\n/);
+const skillUi = await fs.readFile(path.join(repoRoot, "plugins/paper-figure-loom/skills/rebuild-paper-figures/agents/openai.yaml"), "utf8");
+assert.match(skillUi, /\$rebuild-paper-figures/);
+await assert.rejects(fs.access(path.join(repoRoot, "plugins/paper-figure-loom/skills/build-paper-framework-diagrams")));
+await assert.rejects(fs.access(path.join(repoRoot, "plugins/paper-figure-loom/skills/forge-paper-figures")));
 
 const marketplace = JSON.parse(await fs.readFile(path.join(repoRoot, ".agents/plugins/marketplace.json"), "utf8"));
-assert.equal(marketplace.plugins[0].name, "paper-figure-studio");
-assert.equal(marketplace.plugins[0].source.path, "./plugins/paper-figure-studio");
+assert.equal(marketplace.plugins[0].name, "paper-figure-loom");
+assert.equal(marketplace.plugins[0].source.path, "./plugins/paper-figure-loom");
 await assert.rejects(fs.access(path.join(repoRoot, "plugins/paper-diagram-forge")));
 
 const sourceFiles = [];
